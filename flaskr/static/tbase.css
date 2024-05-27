@@ -1,1 +1,109 @@
-#main stylesheet 
+/**body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+
+.jumbotron {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+}
+
+.card {
+    border: 1px solid #007bff;
+}
+
+.card-body {
+    background-color: #f1f1f1;
+}
+*/
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.circle-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    margin: -100px 0 0 -100px;
+    border-radius: 50%;
+    background: #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-item {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    color: #007bff;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.menu-item a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu-item#item1 {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+.menu-item#item2 {
+    top: 50%;
+    right: 0;
+    transform: translate(100%, -50%);
+}
+
+.menu-item#item3 {
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+}
+
+.menu-item#item4 {
+    top: 50%;
+    left: 0;
+    transform: translate(-100%, -50%);
+}
+
+.circle-menu:hover .menu-item {
+    transform: scale(1.1);
+}
+
+.jumbotron {
+    margin-top: 150px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+}
+
+.card {
+    border: 1px solid #007bff;
+}
+
+.card-body {
+    background-color: #f1f1f1;
+}
