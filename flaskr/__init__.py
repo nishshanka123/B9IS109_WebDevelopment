@@ -30,6 +30,10 @@ def create_app(app_config=None):
 
     #initialize the database connectivity
     
+    # register the authentication blueprint
+    from . import authenticate
+    app.register_blueprint(authenticate.authenticate_bp)
+
     return app
 
     app = Flask(__name__)
