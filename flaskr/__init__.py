@@ -1,43 +1,40 @@
-import os
-from flask import Flask, render_template
+from flask import Flask, render_template 
+from flaskr.config import Config
+from flaskr.db import Database
+from flaskr.authenticate import authenticate_bp
 
-# Flask application factory create_app()
-def create_app(app_config=None):
-    # create and configure the app
-    # create a flask instance
-    app = Flask(__name__, instance_relative_config=True)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
-    # SECRET_KEY is used by Flask and extensions to keep data safe. 
-    # It’s set to 'dev' to provide a convenient value during development, but it should be 
-    # overridden with a random value when deploying.
-    app.config.from_mapping(
-        SECRET_KEY='dev',        
-    )
+    # create the db config using the Config object
+    db_config = {
+        'user' : app.config['MYSQL_USER'],
+        'password' : app.config['MYSQL_PASSWORD'],
+        'host' : app.config['MYSQL_HOST'],
+        'database' : app.config['MYSQL_DB']
+    }
 
-    # implement loading the application configuration from an external file
-    if app_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(app_config)
+    #create DB object and connect with the database
+    db = Database(db_config)
+    db.connect()
 
-    # route to website index
+    # add the db to the app config
+    app.config['db'] = db
+
+    #register the authenticate blueprint
+    app.register_blueprint(authenticate_bp)
+
+    ###########################################
+    ##  route to website index
+    ###########################################
     @app.route('/')
     @app.route('/index')
     def index():
         return render_template('index.html')
 
-    #initialize the database connectivity
-    
-    # register the authentication blueprint
-    from . import authenticate
-    app.register_blueprint(authenticate.authenticate_bp)
+    @app.teardown_appcontext
+    def close_db_connection(exception):
+        db.disconnect()
 
     return app
-
-    app = Flask(__name__)
-
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='8080')
