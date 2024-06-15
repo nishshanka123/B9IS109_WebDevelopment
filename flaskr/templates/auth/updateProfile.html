@@ -1,0 +1,54 @@
+{% extends 't_sub_base.html' %}
+
+{% block page_title %} UpdateProfile {% endblock %}
+
+{% block header1 %}<h1>Update my profile</h1>{% endblock %} 
+
+{% block page_content %}
+<div class="task-grid">
+    <div class="task">
+        <section class="registration-form">
+            <h2>User Registration</h2>
+            <form action="{{ url_for('authenticate.updateProfile') }}" method="post">
+            <!--form action="{{ url_for('index') }}" method="post"-->
+                <label for="user_name">User Name:</label>
+                <input type="text" id="name" name="name" value="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="name@gmail.com" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value="pwd" required>
+                
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm_password" value="pwd" required>                                
+
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="last name" required>
+
+                <label for="address_line1">Address Line1:</label>
+                <input type="text" id="address_line1" name="address_line1" value="address_line1" optional>
+
+                <label for="address_line2">Address Line2:</label>
+                <input type="text" id="address_line2" name="address_line2" value="address_line2" optional>
+
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country" value="SL" required>
+
+                <label for="area_code">Area Code:</label>
+                <input type="text" id="area_code" name="area_code" value="200100" required>
+                
+                <label for="terms">
+                    <input type="checkbox" id="terms" name="terms">
+                    I agree to the terms and conditions
+                </label>
+                
+                <input type="submit" value="Register" class="btn">
+            </form>
+        </section>
+    </div>
+    <div class="task">
+        <h2>Terms and Conditions</h2>
+    </div>       
+</div>
+{% endblock %}
