@@ -96,6 +96,19 @@ def login():
 
     return render_template('auth/login.html')
 
+# Logout API
+@authenticate_bp.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if session['user_name']:
+        print("clearing session and signing out")
+        session.clear()
+        return redirect(url_for("index"))
+    else:
+        print("No active user signed in")
+        
+    return render_template('auth/login.html')
+
+
 @authenticate_bp.route('/updateUser', methods=['GET', 'POST'])
 def updateUser():
     error = None
