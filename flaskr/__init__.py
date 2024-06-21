@@ -1,40 +1,46 @@
-from flask import Flask, render_template 
+from flask import Flask, render_template, g
 from flaskr.config import Config
 from flaskr.db import Database
 from flaskr.authenticate import authenticate_bp
 
+# application factory
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # create the db config using the Config object
+    # create the db config
     db_config = {
-        'user' : app.config['MYSQL_USER'],
-        'password' : app.config['MYSQL_PASSWORD'],
-        'host' : app.config['MYSQL_HOST'],
-        'database' : app.config['MYSQL_DB']
+        'user': app.config['MYSQL_USER'],
+        'password': app.config['MYSQL_PASSWORD'],
+        'host': app.config['MYSQL_HOST'],
+        'database': app.config['MYSQL_DB']
     }
 
-    #create DB object and connect with the database
-    db = Database(db_config)
-    db.connect()
+    # pre-initiate the app, setup the database connection and make it available for globel context
+    @app.before_request
+    def before_request():
+        if 'db' not in g:
+            g.db = Database(db_config)
+            g.db.connect()
 
-    # add the db to the app config
-    app.config['db'] = db
-
-    #register the authenticate blueprint
+    # disconnect the database at app teardown
+    @app.teardown_appcontext
+    def close_db_connection(exception):
+        db = g.pop('db', None)
+        if db is not None:
+            db.disconnect()
+    
+    # do register the authentication blueprint
     app.register_blueprint(authenticate_bp)
 
     ###########################################
-    ##  route to website index
+    ##  route to website index and other pages.
     ###########################################
     @app.route('/')
     @app.route('/index')
     def index():
         return render_template('index.html')
 
-    @app.teardown_appcontext
-    def close_db_connection(exception):
-        db.disconnect()
-
     return app
+
+# Run application as a python file
