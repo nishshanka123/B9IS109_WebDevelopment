@@ -1,3 +1,4 @@
+
 from flask import (
     Blueprint, 
     render_template,
@@ -5,7 +6,8 @@ from flask import (
     redirect,
     url_for,
     flash,
-    current_app
+    g,
+    session
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -13,16 +15,6 @@ authenticate_bp = Blueprint('authenticate', __name__, url_prefix='/auth')
 
 @authenticate_bp.route('/registerUser', methods=['GET', 'POST'])
 def registerUser():
-    user_name = None
-    email = None
-    password = None
-    password_c = None
-    security_q = None
-    security_qa = None    
-
-    confirm_password = None
-    country = None
-    terms_accepted = False
     error = None
     if request.method == 'POST':
         user_name = request.form['user_name']
@@ -30,101 +22,123 @@ def registerUser():
         password = request.form['password']
         password_c = request.form['confirm_password']
         security_q = request.form['sec_qlist']
-        security_qa = request.form ['sec_qa']
+        security_qa = request.form['sec_qa']
         terms_accepted = 'terms' in request.form
 
         if not user_name:
-            error = 'User name should not empty'
+            error = 'User name should not be empty'
         elif not password:
-            error = 'Password should not empty'
-        
-        print(f"Auth: {terms_accepted}")
-        if not terms_accepted:
+            error = 'Password should not be empty'
+        elif not terms_accepted:
             error = 'Terms and Conditions are not accepted.'
 
-
         if error is None:
-            #get the db from current application
-            db = current_app.config['db']
+            db = g.get('db')
             if db is None:
                 print("DB connection is None")
 
             try:
-                insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) values (%s, %s, %s, %s, %s, %s)'''
-                #print(f"insert_q",(user_name, email, password, security_q, security_qa, 1) )
-                #insert_q = "INSERT INTO user_info (email, first_name, last_name, user_name, date_of_birth, address_line1, address_line2, area_code) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                #db.execute_query("INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) values (%s, %s, %s, %s, %s, %s)", (user_name, email, password, security_q, security_qa, '1') )
-                db.execute_query(insert_q, (user_name, email, password, security_q, security_qa, '1') )
-
+                insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
+                              VALUES (%s, %s, %s, %s, %s, %s)'''
+                hashed_password = generate_password_hash(password)
+                db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, '1'))
             except Exception as ex:
-                #flash(f"Error: {str(ex)}", 'danger')
                 print(f"Database error occurred: {ex}")
+                error = "Registration failed."
             else:
                 return redirect(url_for("authenticate.login"))
-        else:
-            print(f"Form submission error: {error}")
-            flash(error, 'danger')
-            return redirect(url_for('authenticate.registerUser') )
-    elif request.method == 'GET':
-        pass
-
-
-    return render_template('auth/registerUser.html')
-
-@authenticate_bp.route('/updateUser', methods=['GET', 'POST'])
-def updateUser():
-    print("updateUser: ------------> 1")
-    print("request.form: " , request.form)
-    user_name = None
-    email = None
-    password = None
-    first_name = None
-    last_name = None
-    address_line1 = None
-    address_line2 = None
-    date_of_birth = None
-    area_code = None
-
-    confirm_password = None
-    country = None
-    tnc = False
-    if request.method == 'POST':
-        print("updateUser: ------------> 2")
-        name = request.form['name']
-        email = request.form['email']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        address_line1 = request.form['address_line1']
-        address_line2 = request.form ['address_line2']
-        area_code = request.form['area_code']
-
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        country = request.form['country']
-        #tnc = request.form['terms']
-        
-        error = None
-    if not user_name:
-        error = 'User name should not empty'
-    elif not password:
-        error = 'Password should not empty'
-
-    if error is None:
-        #get the db from current application
-        db = current_app.config['db']
-        try:
-            insert_q = "INSERT INTO user_info (email, first_name, last_name, user_name, date_of_birth, address_line1, address_line2, area_code) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            db.execute_query(insert_q, email, first_name, last_name, user_name, date_of_birth, address_line1, address_line2, area_code)
-        except Exception as ex:
-            flash(f"Error: {str(ex)}", 'danger')
-        else:
-            return redirect(url_for("auth.login"))
-            
+        flash(error, 'danger')
+        return redirect(url_for('authenticate.registerUser'))
 
     return render_template('auth/registerUser.html')
 
 @authenticate_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
+    if request.method == 'POST':
+        user_name = request.form['user_name']
+        password = request.form['password']
+        #print("--------------Login: POST request received")
+
+        if not user_name or not password:
+            error = "Login failed: User name or password is empty. Please check and retry."
+            print("user name or password is empty")
+        else:
+            db = g.get('db')
+            if db is None:
+                print("Database connection is None")
+                error = "Database connection issue."
+            else:
+                print("Get the user information from db")
+                try:
+                    query = "SELECT * FROM auth_info WHERE user_name=%s"
+                    user_data = db.fetch_query(query, (user_name,))
+                except Exception as ex:
+                    print(f"DB query execution error occurred: {ex}")
+                    error = "Database query error."
+
+                if user_data:
+                    #print("user data: ", user_data)
+                    user_data = user_data[0]
+                    #if not check_password_hash(user_data['pwd_hash'], password):
+                    if password != user_data['pwd_hash']:
+                        error = "Incorrect credentials. Please check your login and try again."
+                else:
+                    error = "Incorrect credentials. Please check your login and try again."
+
+        if error is None:
+            session.clear()
+            session['user_name'] = user_data['user_name']
+            return redirect(url_for("index"))
+        flash(error)
+    else:
+        pass
 
     return render_template('auth/login.html')
 
+# Logout API
+@authenticate_bp.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if session['user_name']:
+        print("clearing session and signing out")
+        session.clear()
+        return redirect(url_for("index"))
+    else:
+        print("No active user signed in")
+        
+    return render_template('auth/login.html')
+
+
+@authenticate_bp.route('/updateUser', methods=['GET', 'POST'])
+def updateUser():
+    error = None
+    if request.method == 'POST':
+        user_name = request.form['name']
+        email = request.form['email']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        address_line1 = request.form['address_line1']
+        address_line2 = request.form['address_line2']
+        area_code = request.form['area_code']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        country = request.form['country']
+
+        if not user_name:
+            error = 'User name should not be empty'
+        elif not password:
+            error = 'Password should not be empty'
+
+        if error is None:
+            db = g.get('db')
+            try:
+                update_q = """UPDATE user_info SET email=%s, first_name=%s, last_name=%s, date_of_birth=%s, address_line1=%s, 
+                              address_line2=%s, area_code=%s WHERE user_name=%s"""
+                db.execute_query(update_q, (email, first_name, last_name, user_name, address_line1, address_line2, area_code))
+            except Exception as ex:
+                print(f"Database error occurred: {ex}")
+                flash(f"Error: {str(ex)}", 'danger')
+            else:
+                return redirect(url_for("auth.login"))
+        flash(error, 'danger')
+    return render_template('auth/registerUser.html')

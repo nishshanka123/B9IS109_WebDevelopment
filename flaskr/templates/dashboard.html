@@ -1,0 +1,24 @@
+{% extends 't_sub_base.html' %}
+
+{% block page_title %} Dashboard {% endblock %}
+
+{% block header1 %}<h1>Dashboard</h1>{% endblock %} 
+
+{% block page_content %}
+<div class="task-grid">
+    <div class="task">
+        <section class="registration-form">
+            <h2>Survay 1</h2>
+            <form action="{{ url_for('authenticate.registerUser') }}" method="post">
+            
+            </form>
+        </section>
+    </div>
+    <div class="task">
+        <h2>Survay 2</h2>
+        <section>
+            <p>data</p>
+        </section>
+    </div>       
+</div>
+{% endblock %}

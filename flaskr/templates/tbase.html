@@ -1,46 +1,47 @@
-<!--Base template-->
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merchant Advertisement</title>
+    <title>Pay to Surf</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='tbase.css') }}">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
-
-    
-    <!--
-    <div class="container">        
-        <div class="section-left">
-            <h2>Section 1</h2>
-            <p>This is the content of section 1.</p>
+    <header>
+        <div class="container">
+            <h1>Pay to Surf</h1>
+            <nav>
+                {% if session['user_name'] %}
+                <ul>
+                    <li><a href="#">Welcome {{ session['user_name'] }}</a></li>
+                    <li> | <a href="{{ url_for('loadDashboard') }}">Task Dashboard</a> | </li>
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a> | </li>
+                    <li><a href="{{ url_for('about') }}">My Profile</a> | </li>
+                    <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
+                </ul>
+                {% else %}
+                <ul>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('authenticate.registerUser') }}">Register</a></li>
+                </ul>
+                {% endif %}
+                
+            </nav>
         </div>
-        <div class="section-right">
-            <h2>Section 2</h2>
-            <p>This is the content of section 2.</p>         
-        </div>
-        <div class="section">
-            <h2>Section 3</h2>
-            <p>This is the content of section 3.</p>
-        <div>
-    </div>
-    -->
+    </header>
 
-    <div class="circle-menu">
-        <div class="menu-item" id="item1"><a href="{{ url_for('index') }}">Home</a></div>
-        <div class="menu-item" id="item2"><a href="{{ url_for('authenticate.registerUser') }}">About Us</a></div>
-        <div class="menu-item" id="item3"><a href="{{ url_for('index') }}">Help and Support</a></div>
-        <div class="menu-item" id="item4"><a href="{{ url_for('index') }}">Features</a></div>
-        <div class="menu-item" id="item5"><a href="{{ url_for('authenticate.registerUser') }}">Login <br>or<br> Register</a></div>
-    </div>
-    <!--External javascripts for dynamic elements -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <main>
+        <div class="container-main">
+            <div class="section-empty"> </div>   
+            {% block page_content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 BB9IS109 WebDevelopment</p>
+    </footer>
 </body>
-
 </html>
