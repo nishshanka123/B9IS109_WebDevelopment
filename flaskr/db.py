@@ -36,11 +36,14 @@ class Database:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             self.connection.commit()
-        except Error as er:
+        except Exception as er:
             print(f"DB query execution failure: {er}")
+            raise Exception(F"{er}")
         finally:
             if cursor:
                 cursor.close()
+
+        return True
     
     # function to fetch the records by executing a query.
     def fetch_query(self, query, params=None):

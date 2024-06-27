@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, url_for, request, render_template, g
+from flask import Flask, session, redirect, url_for, request, render_template, g, jsonify
 from flaskr.config import Config
 from flaskr.db import Database
 from flaskr.authenticate import authenticate_bp
@@ -52,8 +52,11 @@ def create_app():
         
     ## About Us
     @app.route('/about',methods=['GET', 'POST'])
-    def about():            
-        return render_template('about.html')
+    def about():   
+        response = {
+            'message': 'User registered failed',            
+            }         
+        return render_template('about.html', data="Kawuda yako mee pittu hadanne....?")
 
         
     ## Contact Us
