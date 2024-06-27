@@ -5,11 +5,20 @@
 {% block header1 %}<h1>About Us</h1>{% endblock %} 
 
 {% block page_content %}
+
 <div class="task-grid">    
     <div class="task">
         <h2>About Us</h2>
         <section>
             <p>Who we are ?</p>
+            <p id="test">
+            </p>
+                <script type="text/javascript">
+                    var test = "{{data}}";
+                    console.log(test);
+                    document.getElementById("test").innerHTML = "<h1>{{data}}</h1>";
+
+                </script>
         </section>
     </div>       
 </div>

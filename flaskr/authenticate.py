@@ -7,11 +7,17 @@ from flask import (
     url_for,
     flash,
     g,
-    session
+    session,
+    jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_user, current_user, logout_user, login_required
+
+#from app.models import User
 
 authenticate_bp = Blueprint('authenticate', __name__, url_prefix='/auth')
+bcrypt = Bcrypt()
 
 @authenticate_bp.route('/registerUser', methods=['GET', 'POST'])
 def registerUser():
@@ -24,6 +30,13 @@ def registerUser():
         security_q = request.form['sec_qlist']
         security_qa = request.form['sec_qa']
         terms_accepted = 'terms' in request.form
+        pub_or_sub = 'pub_or_sub' in request.form
+
+        print("pub or sub: " , pub_or_sub)
+        if pub_or_sub:
+            pub_or_sub = 1
+        else:
+            pub_or_sub = 2
 
         if not user_name:
             error = 'User name should not be empty'
@@ -31,25 +44,74 @@ def registerUser():
             error = 'Password should not be empty'
         elif not terms_accepted:
             error = 'Terms and Conditions are not accepted.'
+        elif password != password_c:
+            error = 'Passwords do not match.'
 
         if error is None:
             db = g.get('db')
             if db is None:
                 print("DB connection is None")
+                error = "Database connection issue."
 
             try:
-                insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
-                              VALUES (%s, %s, %s, %s, %s, %s)'''
-                hashed_password = generate_password_hash(password)
-                db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, '1'))
+                #insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
+                #              VALUES (%s, %s, %s, %s, %s, %s)'''
+                #hashed_password = generate_password_hash(password)
+                #print(F"query: {insert_q}")
+                
+                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                #db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, '1'))
+                result_message = db.call_register_user(user_name, email, hashed_password, security_q, security_qa, pub_or_sub)
+                print(F"test----1: {result_message}")
+                if result_message == 'SUCCESS':
+                    response = {
+                                'message': "User registration successful",
+                                'data': {
+                                    'message': "User registration successful",
+                                    'status': "success",
+                                    'redirect_url': url_for('authenticate.login')
+                                }
+                            }
+                    return jsonify(response)
+                    #return redirect(url_for("authenticate.login"))
+                else:
+                    #print(f"test----> {result_message}")
+                    response = {
+                                'message': result_message,
+                                'data': {
+                                    'message': result_message,
+                                    'status': "fail"
+                                }
+                            }
+                    return jsonify(response)
+                    
+
             except Exception as ex:
                 print(f"Database error occurred: {ex}")
-                error = "Registration failed."
+                error = F"Registration failed : {ex}"
+                response = {
+                                'message': 'Registration failed: Database server error',
+                                'data': {
+                                    'message': error,
+                                    'status': "fail"
+                                }
+                            }
+                return jsonify(response)
             else:
+                flash('Your account has been created! You can now log in.', 'success')
                 return redirect(url_for("authenticate.login"))
-        flash(error, 'danger')
-        return redirect(url_for('authenticate.registerUser'))
-
+        else:
+            #response = {'message': 'Error: ', 'data': 'Error'}
+            error = F"User registration failed : {error}"
+            response = {
+                            'message': error,
+                            'data': {
+                                'message': error,
+                                'status': "fail"
+                            }
+                        }
+            return jsonify(response)
+    
     return render_template('auth/registerUser.html')
 
 @authenticate_bp.route('/login', methods=['GET', 'POST'])
@@ -58,7 +120,6 @@ def login():
     if request.method == 'POST':
         user_name = request.form['user_name']
         password = request.form['password']
-        #print("--------------Login: POST request received")
 
         if not user_name or not password:
             error = "Login failed: User name or password is empty. Please check and retry."
@@ -89,8 +150,26 @@ def login():
         if error is None:
             session.clear()
             session['user_name'] = user_data['user_name']
-            return redirect(url_for("index"))
-        flash(error)
+            response = {
+                            'message': 'success',
+                            'data': {
+                                'message': 'success',
+                                'status': "success",
+                                'redirect_url': url_for('index')
+                            }
+                        }
+            #return redirect(url_for("index"))
+            return jsonify(response)
+        else:
+            response = {
+                            'message': 'Authentication failure',
+                            'data': {
+                                'message': f'Authentication failure, {error}',
+                                'status': "fail",
+                            }
+                        }
+            flash(error)
+            return jsonify(response)
     else:
         pass
 
