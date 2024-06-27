@@ -64,4 +64,106 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+    
+    # function to call register_user stored procdure
+    def call_register_user_test1(self, user_name, email, hashed_password, security_q, security_qa, pub_or_sub):
+        #cursor.callproc('register_user', (user_name, email, hashed_password, security_q, security_qa, 1, "@message"))
+        """Execute the register_user mysql stored procedure 
+        Arguments:
+        params: input parameters for the stored procedure
+        """
+        cursor = None
+        try:
+            print("----------------------------> test-1")
+            cursor = self.connection.cursor()
+            cursor.callproc('register_user', (user_name, email, hashed_password, security_q, security_qa, pub_or_sub, "@message"))
+            self.connection.commit()
 
+            # Fetch the output message
+            cursor.execute("SELECT @message")
+            result = cursor.fetchone()
+            print(F"result: {result[0]}")
+            message = result[0] if result else "Unknown error"
+            print(F"returned message: {message}")
+        
+        except Exception as er:
+            print(f"DB query execution failure: {er}")
+            raise Exception(F"{er}")
+        finally:
+            if cursor:
+                cursor.close()
+
+        return message
+
+    def call_register_user_test2(self, user_name, email, hashed_password, security_q, security_qa, pub_or_sub):
+        """Execute the register_user mysql stored procedure 
+        Arguments:
+        params: input parameters for the stored procedure
+        """
+        cursor = None
+        message = "Unknown error"
+        try:
+            print("----------------------------> test-1")
+            cursor = self.connection.cursor()
+
+            # Prepare the output parameter
+            cursor.execute("SET @out_message = ''")
+
+            # Call the stored procedure
+            cursor.callproc('register_user', [user_name, email, hashed_password, security_q, security_qa, pub_or_sub, '@out_message'])
+
+            # Fetch the output message
+            cursor.execute("SELECT @out_message")
+            result = cursor.fetchone()
+            print(result)
+            if result is None:
+                message = "Unknown Error"
+            else:
+                print(f"result: {result[0]}")
+                message = result[0] if result else "Unknown error"
+                print(f"returned message: {message}")
+
+            self.connection.commit()
+            
+        except Exception as er:
+            print(f"DB query execution failure: {er}")
+            raise Exception(f"{er}")
+        finally:
+            if cursor:
+                cursor.close()
+
+        return message
+    
+    def call_register_user(self, user_name, email, hashed_password, security_q, security_qa, pub_or_sub):
+        """Execute the register_user mysql stored procedure 
+        Arguments:
+        params: input parameters for the stored procedure
+        """
+        cursor = None
+        message = "Unknown error"
+        try:
+            print(F"----------------------------> {user_name}-{email}-{hashed_password}-{security_q}-{security_qa}-{pub_or_sub}")
+            cursor = self.connection.cursor()
+
+            # Prepare the output parameter
+            cursor.execute("SET @p_message = ''")
+            
+            # Call the stored procedure and get the OUT value.            
+            result_args = cursor.callproc('register_user', [user_name, email, hashed_password, security_q, security_qa, pub_or_sub, "(0, 'CHAR')"])
+            #print(F"test----------> : {result_args[6]}")
+            if result_args[6]:
+                message = result_args[6]
+            else:
+                message = "Unknown Error"
+
+            # commit the db changes from the connection 
+            self.connection.commit()            
+        
+        except Exception as er:
+            print(f"DB query execution failure: {er}")
+            raise Exception(f"{er}")
+        finally:
+            if cursor:
+                cursor.close()
+
+        return message

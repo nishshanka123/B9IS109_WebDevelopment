@@ -1,3 +1,4 @@
+<script src="{{ url_for('static', filename='login.js') }}"></script>
 {% extends 't_sub_base.html' %}
 
 {% block page_title %} Login {% endblock %}
@@ -11,15 +12,16 @@
             <h2>Signin</h2>
             <form action="{{ url_for('authenticate.login') }}" method="post">
                 <label for="user_name">User Name:</label>
-                <input type="text" id="user_name" name="user_name" value="user_name" required>
+                <input type="text" id="user_name" name="user_name" required>
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="pwd" required>                
+                <input type="password" id="password" name="password" required>                
                 <div class="btn-box">
                     <input type="submit" value="Login" class="btn">
                     <input type="reset" class="btn" value="reset">
                 </div>
             </form>
         </section>
+        <section name="responseMessage" id="responseMessage" > </section>
     </div>
     <div class="task">
         <h2>Post your research queries to get instant replies from students</h2>

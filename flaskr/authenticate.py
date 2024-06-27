@@ -33,6 +33,10 @@ def registerUser():
         pub_or_sub = 'pub_or_sub' in request.form
 
         print("pub or sub: " , pub_or_sub)
+        if pub_or_sub:
+            pub_or_sub = 1
+        else:
+            pub_or_sub = 2
 
         if not user_name:
             error = 'User name should not be empty'
@@ -50,16 +54,49 @@ def registerUser():
                 error = "Database connection issue."
 
             try:
-                insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
-                              VALUES (%s, %s, %s, %s, %s, %s)'''
+                #insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
+                #              VALUES (%s, %s, %s, %s, %s, %s)'''
                 #hashed_password = generate_password_hash(password)
+                #print(F"query: {insert_q}")
+                
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, '1'))
+                #db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, '1'))
+                result_message = db.call_register_user(user_name, email, hashed_password, security_q, security_qa, pub_or_sub)
+                print(F"test----1: {result_message}")
+                if result_message == 'SUCCESS':
+                    response = {
+                                'message': "User registration successful",
+                                'data': {
+                                    'message': "User registration successful",
+                                    'status': "success",
+                                    'redirect_url': url_for('authenticate.login')
+                                }
+                            }
+                    return jsonify(response)
+                    #return redirect(url_for("authenticate.login"))
+                else:
+                    #print(f"test----> {result_message}")
+                    response = {
+                                'message': result_message,
+                                'data': {
+                                    'message': result_message,
+                                    'status': "fail"
+                                }
+                            }
+                    return jsonify(response)
+                    
+
             except Exception as ex:
                 print(f"Database error occurred: {ex}")
                 error = F"Registration failed : {ex}"
-                response = {'message': error, 'data': 'Error'}
-                return jsonify()
+                response = {
+                                'message': 'Registration failed: Database server error',
+                                'data': {
+                                    'message': error,
+                                    'status': "fail"
+                                }
+                            }
+                return jsonify(response)
             else:
                 flash('Your account has been created! You can now log in.', 'success')
                 return redirect(url_for("authenticate.login"))
@@ -67,14 +104,13 @@ def registerUser():
             #response = {'message': 'Error: ', 'data': 'Error'}
             error = F"User registration failed : {error}"
             response = {
-                'message': error,
-                'data': 'Error'
-            }
-            print("TEST----------------> 2")
+                            'message': error,
+                            'data': {
+                                'message': error,
+                                'status': "fail"
+                            }
+                        }
             return jsonify(response)
-
-            #flash(error, 'danger')
-            #return redirect(url_for('authenticate.registerUser'))
     
     return render_template('auth/registerUser.html')
 
@@ -84,7 +120,6 @@ def login():
     if request.method == 'POST':
         user_name = request.form['user_name']
         password = request.form['password']
-        #print("--------------Login: POST request received")
 
         if not user_name or not password:
             error = "Login failed: User name or password is empty. Please check and retry."
@@ -115,8 +150,26 @@ def login():
         if error is None:
             session.clear()
             session['user_name'] = user_data['user_name']
-            return redirect(url_for("index"))
-        flash(error)
+            response = {
+                            'message': 'success',
+                            'data': {
+                                'message': 'success',
+                                'status': "success",
+                                'redirect_url': url_for('index')
+                            }
+                        }
+            #return redirect(url_for("index"))
+            return jsonify(response)
+        else:
+            response = {
+                            'message': 'Authentication failure',
+                            'data': {
+                                'message': f'Authentication failure, {error}',
+                                'status': "fail",
+                            }
+                        }
+            flash(error)
+            return jsonify(response)
     else:
         pass
 

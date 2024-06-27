@@ -2,6 +2,40 @@ use PTC;
 select * from user_info;
 select * from auth_info;
 delete from auth_info where user_name='user_name';
+select count(user_name) from auth_info where user_name = 'user_name';
+CALL register_user('example_user', 'example@example.com', 'hashed_password', 1, 'answer', 1, @output_message);
+DELIMITER $$
+CREATE DEFINER=`dbs`@`localhost` PROCEDURE `register_user`(
+in user_name VARCHAR(20), 
+in email VARCHAR(20), 
+in pwd_hash VARCHAR(256), 
+in security_question_id varchar(45),
+in sq_answer varchar(30),
+in role_id int,
+out message varchar(60)
+)
+BEGIN
+	DECLARE user_count INT;
+
+    -- Check if the user already exists
+    SELECT COUNT(*) INTO user_count
+    FROM auth_info
+    WHERE user_name = user_name;
+	
+    -- If the user does not exist, insert a new record
+    IF user_count = 0 THEN
+        INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id)
+        VALUES (user_name, email, pwd_hash, security_question_id, sq_answer, role_id);
+        SET message = 'User successfully registered.';
+    ELSE
+        -- If the user already exists, set the return message
+        SET message = 'User already exists.';
+    END IF;
+    
+    select message;
+END$$
+DELIMITER ;
+SELECT @output_message;
 
 
 INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 

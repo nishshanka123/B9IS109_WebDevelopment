@@ -36,12 +36,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: formData
             })
             .then(response => response.json())
+            /*.then(message=>{
+                console.log(message);
+                if (message) {
+                    responseMessage.innerHTML = `<p>${message.data}</p>`;
+                }
+            })*/
             .then(data => {
                 // Handle the response data
                 console.log(data);
+                //console.log({data.message});
                 const responseMessage = document.getElementById('responseMessage');
-                if (data.message) {
-                    responseMessage.innerHTML = `<p>${data.message}</p>`;
+                if (data) {
+                    //responseMessage.innerHTML = `<div class="message"><p>${data.data.message}</p></div>`;
+
+                    if (data.data.status === 'success') {
+                        window.location.href = data.data.redirect_url;
+                    } else {
+                        //alert(result.message);
+                        responseMessage.innerHTML = `<div class="message"><p>${data.data.message}</p></div>`;
+                    }
                 }
             })
             .catch(error => {
