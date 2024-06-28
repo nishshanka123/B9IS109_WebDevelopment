@@ -15,9 +15,10 @@
                 <input type="text" id="user_name" name="user_name" required>
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>                
-                <div class="btn-box">
+                <div class="btn-box">                    
                     <input type="submit" value="Login" class="btn">
                     <input type="reset" class="btn" value="reset">
+                    <p>Not a member ? <a href="{{ url_for('authenticate.registerUser') }}">Register here</a></p>
                 </div>
             </form>
         </section>

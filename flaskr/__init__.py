@@ -46,9 +46,77 @@ def create_app():
     @app.route('/dashboard',methods=['GET', 'POST'])
     def loadDashboard():            
         if session['user_name']:
+            select_query = None
+            if session['role_id'] == 1:
+                select_query = "Select ptask_id, task_name, task_type, points, description from ptc_publisher_task where user_name = %"
+            elif session['role_id'] == 2:
+                select_query = "Select ptask_id, task_name, task_type, points from ptc_publisher_task where user_name = %"
+            else:
+                select_query = "Select ptask_id, task_name, task_type, points from ptc_publisher_task where user_name = %"
+
+            result = fetch_query(select_query, session['user_name']);
+
             return render_template('dashboard.html')
         else:
             return redirect(url_for("index"))
+        
+    ## Publish a task
+    @app.route('/publishTask',methods=['GET', 'POST'])
+    def publishTask():            
+        if session['user_name']:
+            if request.method == 'POST':
+                # Extract job type
+                job_type = request.form.get('type_list')
+                
+                # Extract number of fields
+                no_of_fields = int(request.form.get('no_of_fields'))
+                
+                # Extract dynamically generated fields
+                form_data = {}
+                for i in range(1, no_of_fields + 1):
+                    field_value = request.form.get(f'field_{i}')
+                    data_type = request.form.get(f'data_type_{i}')
+                    form_data[f'field_{i}'] = {'value': field_value, 'data_type': data_type}
+
+                # Print form data (for debugging)
+                print(f"Job Type: {job_type}")
+                print(f"Number of Fields: {no_of_fields}")
+                for key, value in form_data.items():
+                    print(f"{key}: {value}")
+
+                response = {
+                            'message': 'Task successfully Created.',
+                            'data': {
+                                'message': f'Task successfully Created.',
+                                'status': "success",
+                            }
+                        }
+                
+                return jsonify(response)
+            else:
+                pass
+            print("test------------> end")
+            return render_template('publish_task.html')
+        else:
+            return redirect(url_for("index"))
+        
+    
+    ## Update task
+    @app.route('/updateTask',methods=['GET', 'POST'])
+    def updateTask():            
+        if session['user_name']:
+            return render_template('publish_task.html')
+        else:
+            return redirect(url_for("index"))
+        
+
+    ## Update task
+    #@app.route('/updateTask',methods=['GET', 'POST'])
+    #def updateTask():            
+    #    if session['user_name']:
+    #        return render_template('update_task.html')
+    #    else:
+    #        return redirect(url_for("index"))
         
     ## About Us
     @app.route('/about',methods=['GET', 'POST'])

@@ -1,64 +1,39 @@
+<script src="{{ url_for('static', filename='publish_task.js') }}"></script>
 {% extends 't_sub_base.html' %}
 
 {% block page_title %} PublishTask {% endblock %}
 
-{% block header1 %}<h1>Publish net job</h1>{% endblock %} 
+{% block header1 %}<h1>Publish a Job</h1>{% endblock %} 
 
 {% block page_content %}
 <div class="task-grid">
     <div class="task">
         <section class="registration-form">
-            <h2>User Registration</h2>
-            <form action="{{ url_for('authenticate.registerUser') }}" method="post">
-            <!--form action="{{ url_for('index') }}" method="post"-->
-                <label for="user_name">User Name:</label>
-                <input type="text" id="user_name" name="user_name" value="user_name" required>
-                
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="name@gmail.com" required>
-                
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="pwd" required>
-                
-                <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="confirm-password" name="confirm_password" value="pwd" required>
-                
-                <label for="sec_qlist">Security Question:</label>
-                <select name="sec_qlist" id="sec_qlist">
-                    <option value="q01">What is your first school ?</option>
-                    <option value="q02">What is your first pet's name ?</option>
-                    <option value="q03">What is your first car ?</option>
-                    <option value="q04">What is your best friend's name ?</option>
-                    <option value="q05">What is your fevorite color ?</option>
+            <h2>Create New Task</h2>
+            <form action="{{ url_for('publishTask') }}" method="post">
+                <label for="no_of_fields">Number of Fields:</label>
+                <input type="text" id="no_of_fields" name="no_of_fields" onchange="generateForm()">
+
+                <label for="task type">Job Type:</label>
+                <select name="type_list" id="type_list">
+                    <option value="t00">Select a Job type</option>
+                    <option value="t01">Survey</option>
+                    <option value="t02">Poll</option>
                 </select>
 
-                <label for="sec_qa">Security Question Answer:</label>
-                <input type="text" id="sec_qa" name="sec_qa" value="Answer1" required>
-                
-                <label for="pub_or_sub">
-                    <input type="checkbox" id="pub_or_sub" name="pub_or_sub" value="accept">
-                    Register as a publisher
-                </label>
-                <label for="terms">
-                    <input type="checkbox" id="terms" name="terms" value="accept">
-                    I agree to the terms and conditions
-                </label>
-                            
+                <section class="dynamic-form" id="dynamic_form"></section>
+
                 <div class="btn-box">
-                    <input type="submit" value="Register" class="btn">
+                    <input type="submit" value="Publish Task" class="btn">
                     <input type="reset" class="btn" value="Clear Fields">
                 </div>
+
+                <section class="dynamic-form" id="responseMessage"></section>
                 
             </form>
         </section>
     </div>
-    <div class="task">
-        <h2>Terms and Conditions</h2>
-        <section>
-            <p>Already a member ? <a href="{{ url_for('authenticate.login') }}">Login here</a></p>
-            <div name="responseMessage" id="responseMessage"></div>
-        </section>
-    </div>
+    
 </div>
 {% endblock %}
 
