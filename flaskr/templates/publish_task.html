@@ -11,6 +11,14 @@
         <section class="registration-form">
             <h2>Create New Task</h2>
             <form action="{{ url_for('publishTask') }}" method="post">
+                <label for="task_name">Task Name:</label>
+                <input type="text" id="task_name" name="task_name">
+                <label for="desc">Description:</label>
+                <input type="text" id="desc" name="desc">
+                <label for="points">Points:</label>
+                <input type="number" id="points" name="points">
+                <label for="no_of_slots">Number of Slots:</label>
+                <input type="number" id="no_of_slots" name="no_of_slots">
                 <label for="no_of_fields">Number of Fields:</label>
                 <input type="text" id="no_of_fields" name="no_of_fields" onchange="generateForm()">
 

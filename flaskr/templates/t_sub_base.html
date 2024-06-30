@@ -19,7 +19,7 @@
                             <li><a href="#">Welcome {{ session['user_name'] }}</a></li>
                             <li> | <a href="{{ url_for('loadDashboard') }}">Publisher Dashboard</a> | </li>
                             <li><a href="{{ url_for('index') }}">Home</a> | </li>
-                            <li><a href="{{ url_for('authenticate.updateUser') }}">My Profile</a> | </li>
+                            <li><a href="{{ url_for('publishTask') }}">Publish Tasks</a> | </li>
                             <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
                         </ul>
                     {% elif session['role_id'] == 2 %}

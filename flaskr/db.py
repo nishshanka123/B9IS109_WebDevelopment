@@ -25,7 +25,28 @@ class Database:
             print("Database connection is disconnected")
     
     # function to execute database query
-    def execute_query(self, query, params=None):
+    def execute_query(self, query, params):
+        """Execute the database query 
+        Arguments:
+        query: database query to execute
+        params: parameters for the db query
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            self.connection.commit()
+        except Exception as er:
+            print(f"DB query execution failure: {er}")
+            raise Exception(F"{er}")
+        finally:
+            if cursor:
+                cursor.close()
+
+        return True
+    
+    # function to execute database query with variable args
+    def execute_vquery(self, query, *params):
         """Execute the database query 
         Arguments:
         query: database query to execute
@@ -56,6 +77,26 @@ class Database:
         try:
             cursor = self.connection.cursor(dictionary=True)
             cursor.execute(query, params)
+            result = cursor.fetchall()
+            return result
+        except Error as er:
+            print(f"DB query execution failure: {er}")
+            return None
+        finally:
+            if cursor:
+                cursor.close()
+
+    # function to fetch records by query and varibale args
+    def fetch_vquery(self, query, *params):
+        """Execute database query and return the result set as a dictionary
+        Arguments:
+        query: database query
+        params: parameters for the db query
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor(dictionary=True)
+            cursor.execute(query, *params)
             result = cursor.fetchall()
             return result
         except Error as er:

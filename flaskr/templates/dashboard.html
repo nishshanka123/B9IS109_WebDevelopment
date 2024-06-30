@@ -1,18 +1,174 @@
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+
 {% extends 't_sub_base.html' %}
 
 {% block page_title %} Dashboard {% endblock %}
 
-{% block header1 %}<h1>Dashboard</h1>{% endblock %} 
+{% block header1 %}<h1>Dashboard</h1>{% endblock %}
 
 {% block page_content %}
-<div class="task-grid">
-    <div class="task">
-        <section class="registration-form">
-            <h2>Survay 1</h2>
-            <form action="{{ url_for('authenticate.registerUser') }}" method="post">
-            
-            </form>
-        </section>
+<form action="{{ url_for('completeTask') }}" method="post">
+<section class="registration-form">
+    <div class="task-grid" id="task_grid">
+        
+            <!--section class="registration-form"-->
+            {% if session['user_name'] %}
+            {% if session['role_id'] == 1 %}
+
+            <script>
+                // Get the JSON data from the template
+                const jsonData = {{ form_data| tojson | safe }};
+
+                console.log("data: ", jsonData);
+
+                // Function to create div containers from JSON data
+                function createDivsFromJson(data) {
+                    //const container = document.getElementById('contentContainer');
+                    const container = document.getElementById('task_grid');
+
+
+                    // Iterate over the JSON array and create divs
+                    data.json_data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = "task";
+                        const title = document.createElement('h2');
+                        const paragraph = document.createElement('p');
+                        const table = document.createElement('table');
+                        const input = document.createElement('input');
+                        
+
+                        title.textContent = item.title;
+                        paragraph.textContent = item.description;
+                        if (item.task_id) {
+                            // <input type="hidden" id="custId" name="custId" value="3487">
+                            input.type = "hidden";
+                            input.name = "task_id";
+                            input.value = item.task_id;
+                        }
+                        if (item.task_type) {
+                            const tr1 = document.createElement('tr');
+                            const td1 = document.createElement('td');
+                            const td2 = document.createElement('td');
+                            td1.textContent = "Task Type: ";
+                            td2.textContent = item.task_type;
+                            tr1.appendChild(td1);
+                            tr1.appendChild(td2);
+                            table.appendChild(tr1);
+                        }
+
+                        if (item.points) {
+                            const tr2 = document.createElement('tr');
+                            const td21 = document.createElement('td');
+                            const td22 = document.createElement('td');
+                            td21.textContent = "Number of Points: ";
+                            td22.textContent = item.points;
+                            tr2.appendChild(td21);
+                            tr2.appendChild(td22);
+                            table.appendChild(tr2);
+                        }
+
+                        div.appendChild(title);
+                        div.appendChild(paragraph);
+                        div.appendChild(table);
+                        div.appendChild(input);
+
+                        container.appendChild(div);
+                    });
+                }
+
+                // Call the function with the JSON data
+                createDivsFromJson(jsonData);
+            </script>
+            {% else %}
+            <script>
+                // Get the JSON data from the template
+                const jsonData = {{ form_data| tojson | safe }};
+
+                console.log("data: ", jsonData);
+
+                // Function to create div containers from JSON data
+                function createDivsFromJson(data) {
+                    //const container = document.getElementById('contentContainer');
+                    const container = document.getElementById('task_grid');
+
+
+                    // Iterate over the JSON array and create divs
+                    data.json_data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = "task";
+                        const title = document.createElement('h2');
+                        const paragraph = document.createElement('p');
+                        const table = document.createElement('table');
+                        const input = document.createElement('input');
+                        //<input type="submit" value="Publish Task" class="btn">
+                        const submit_button = document.createElement('input');
+                        const form = document.createElement('form');
+                        form.action="{{ url_for('completeTask') }}";
+                        form.method="post";
+                        //console.log("TEST---> ", "{{ url_for('completeTask') }}");
+
+                        title.textContent = item.title;
+                        paragraph.textContent = item.description;
+
+                        console.log("task idxxxx: -----------> ", item.task_id);
+
+                        if (item.task_id) {
+                            // <input type="hidden" id="custId" name="custId" value="3487">
+                            input.type = "hidden";
+                            input.name = "task_id";
+                            input.value = item.task_id;
+                            console.log("task id: -----------> ", item.task_id);
+
+                            submit_button.type = "submit";
+                            submit_button.name = "complete_task";
+                            submit_button.value = "Complete Task";
+                        }
+
+                        if (item.task_type) {
+                            const tr1 = document.createElement('tr');
+                            const td1 = document.createElement('td');
+                            const td2 = document.createElement('td');
+                            td1.textContent = "Task Type: ";
+                            td2.textContent = item.task_type;
+                            tr1.appendChild(td1);
+                            tr1.appendChild(td2);
+                            table.appendChild(tr1);
+                        }
+
+                        if (item.points) {
+                            const tr2 = document.createElement('tr');
+                            const td21 = document.createElement('td');
+                            const td22 = document.createElement('td');
+                            td21.textContent = "Number of Points: ";
+                            td22.textContent = item.points;
+                            tr2.appendChild(td21);
+                            tr2.appendChild(td22);
+                            table.appendChild(tr2);
+                        }
+
+                        div.appendChild(title);
+                        div.appendChild(paragraph);
+                        div.appendChild(table);
+                        if (item.task_id) {
+                            form.appendChild(input);
+                            form.appendChild(submit_button);
+                            div.appendChild(form);
+                            //div.appendChild(input);
+                            //div.appendChild(submit_button);
+                        }
+
+
+                        container.appendChild(div);
+                    });
+                }
+
+                // Call the function with the JSON data
+                createDivsFromJson(jsonData);
+            </script>
+
+            {% endif %}
+            {% endif %}
     </div>
-</div>
+</section>
+</form>
 {% endblock %}
