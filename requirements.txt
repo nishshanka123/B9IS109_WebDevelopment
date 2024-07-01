@@ -19,3 +19,16 @@ Flask-Bcrypt==1.0.1
 Flask-Login==0.6.3
 mysql-connector==2.2.9
 mysql-connector-python==8.3.0
+gunicorn==20.1.0
+# Other dependencies...
+absl-py==2.1.0
+ansible==9.3.0
+ansible-base==2.10.8
+ansible-core==2.16.4
+apache-libcloud==3.2.0
+argcomplete==1.8.1
+array_record==0.5.1
+astunparse==1.6.3
+Babel==2.8.0
+bcrypt==3.2.0
+blinker==1.7.0
