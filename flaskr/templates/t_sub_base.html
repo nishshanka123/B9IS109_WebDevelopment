@@ -11,39 +11,39 @@
 <body>
     <header>
         <div class="container">
+            <img src="{{ url_for('static', filename='pollpit_logo.png') }}" alt="Logo">
             {% block header1 %}{% endblock %}
             <nav>
                 {% if session['user_name'] %}
                     {% if session['role_id'] == 1 %}
                         <ul>
                             <li><a href="#">Welcome {{ session['user_name'] }}</a></li>
-                            <li> | <a href="{{ url_for('loadDashboard') }}">Publisher Dashboard</a> | </li>
-                            <li><a href="{{ url_for('index') }}">Home</a> | </li>
+                            <li><a href="{{ url_for('index') }}">Home</a></li>
+                            <li> | <a href="{{ url_for('loadDashboard') }}">Publisher Dashboard</a> | </li>                            
                             <li><a href="{{ url_for('publishTask') }}">Publish Tasks</a> | </li>
                             <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
                         </ul>
                     {% elif session['role_id'] == 2 %}
                         <ul>
-                            <li><a href="#">Welcome {{ session['user_name'] }}</a></li>
-                            <li> | <a href="{{ url_for('loadDashboard') }}">Task Dashboard</a> | </li>
+                            <li><a href="#">Welcome {{ session['user_name'] }}</a> | </li>
                             <li><a href="{{ url_for('index') }}">Home</a> | </li>
-                            <li><a href="{{ url_for('authenticate.updateUser') }}">My Profile</a> | </li>
+                            <li><a href="{{ url_for('loadDashboard') }}">Task Dashboard</a> | </li>                            
                             <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
                         </ul>
                     {% else %}
                         <ul>
-                            <li><a href="{{ url_for('about') }}">About Us</a></li>
                             <li><a href="{{ url_for('index') }}">Home</a></li>
-                            <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>
-                            <li><a href="{{ url_for('authenticate.registerUser') }}">Register</a></li>
+                            <li><a href="{{ url_for('about') }}">About Us</a></li>
+                            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                            <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>   
                         </ul>
                     {% endif %}                
                 {% else %}
                 <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
                     <li><a href="{{ url_for('about') }}">About Us</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-                    <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>
-                    <li><a href="{{ url_for('authenticate.registerUser') }}">Register</a></li>
+                    <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>                    
                 </ul>
                 {% endif %}
                 

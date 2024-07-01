@@ -15,12 +15,13 @@ function generateForm() {
         // Create a label for the field
         const label = document.createElement('label');
         label.setAttribute('for', `field_${i}`);
-        label.innerText = `Type & Name for Field ${i}:`;
+        label.innerText = `Field ${i}:`;
 
         // Create the input field
         const input = document.createElement('input');
         input.id = `field_${i}`;
         input.name = `field_${i}`;
+        input.placeholder = "type the field name here"
 
         // Create the select box for data type
         const dataTypeSelect = document.createElement('select');

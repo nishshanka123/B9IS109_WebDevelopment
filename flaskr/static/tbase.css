@@ -35,11 +35,14 @@ header .container {
 header .container img{
     height:100px;
     width: 100px;
-    border-radius: 50px;
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-right: 10px;
 }
 
 header h1 {
     margin: 0;
+    display: inline;
 }
 
 header nav ul {

@@ -15,7 +15,7 @@ body {
 header {
     background-color: #007bff;
     color: #fff;
-    padding: 1rem 0;
+    padding: 0rem 2rem;
 }
 
 header .container {
@@ -24,8 +24,17 @@ header .container {
     align-items: center;
 }
 
+header .container img{
+    height:100px;
+    width: 100px;
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
 header h1 {
     margin: 0;
+    display: inline;
 }
 
 header nav ul {
@@ -71,7 +80,7 @@ main {
 .task-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
+    gap: 1rem;    
 }
 
 .task {
@@ -82,12 +91,57 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.task-dashboard {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   
+    height: 100%; /* Full viewport height */
+    background-image: url("logo-simple-light2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+}
+
+.task-msg {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   
+    height: 100%; /* Full viewport height */
+    background-image: url("paper.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+}
+
+.task img{
+    height:100%;
+    width: 100%;
+    vertical-align: middle;
+}
+
 .task h3 {
     margin-bottom: 1rem;
 }
 
 .task p {
     margin-bottom: 1.5rem;
+}
+
+.data-content {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   
+    height: 100%; /* Full viewport height */
+    background-image: url("clipboard-2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
 }
 
 .message {
@@ -133,7 +187,10 @@ main {
 
 .registration-form input[type="text"],
 .registration-form input[type="email"],
-.registration-form input[type="password"]
+.registration-form input[type="password"],
+.registration-form input[type="number"],
+.registration-form input,
+.registration-form textarea
 {
     padding: 0.5rem;
     margin-bottom: 1rem;

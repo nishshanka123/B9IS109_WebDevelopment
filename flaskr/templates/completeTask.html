@@ -8,18 +8,14 @@
 
 {% block page_content %}
 
-<div class="task-grid">
-    <div class="task">
-        <p> TEST test</p>
-    </div>
+<div class="task-grid">    
     <div class="task">
         <!--form action="{{ url_for('executeTask') }}" method="post"-->
         <section class="dynamic-form" id="content-container"></section>
         <section class="dynamic-form" id="responseMessage"></section>
         <!--/form-->
     </div>
-        
-        
+    <div class="task-msg"></div>            
 
     <!--section class="registration-form"-->
     {% if session['user_name'] %}

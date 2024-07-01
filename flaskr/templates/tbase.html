@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pay to Surf</title>
+    <title>PollPit</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='tbase.css') }}">
 </head>
 <body>
     <header>
         <div class="container">
-            <img src="{{ url_for('static', filename='tree.jpg') }}" alt="Logo">
-            <h1>Pay to Surf</h1>
+            <img src="{{ url_for('static', filename='pollpit_logo.png') }}" alt="Logo">
+            <h1>PollPit - Information Platform</h1>
             <nav>
                 {% if session['user_name'] %}
                 <ul>
@@ -24,7 +24,7 @@
                 {% else %}
                 <ul>
                     <li><a href="{{ url_for('about') }}">About Us</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    <!--li><a href="{{ url_for('contact') }}">Contact Us</a></li-->
                     <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>
                     <li><a href="{{ url_for('authenticate.registerUser') }}">Register</a></li>
                 </ul>

@@ -14,7 +14,7 @@
                 <label for="task_name">Task Name:</label>
                 <input type="text" id="task_name" name="task_name">
                 <label for="desc">Description:</label>
-                <input type="text" id="desc" name="desc">
+                <textarea id="desc" name="desc" rows="3" cols="20"></textarea>
                 <label for="points">Points:</label>
                 <input type="number" id="points" name="points">
                 <label for="no_of_slots">Number of Slots:</label>
@@ -24,9 +24,9 @@
 
                 <label for="task type">Job Type:</label>
                 <select name="type_list" id="type_list">
-                    <option value="t00">Select a Job type</option>
-                    <option value="t01">Survey</option>
-                    <option value="t02">Poll</option>
+                    <option value="Survey">Survey</option>
+                    <option value="Poll">Poll</option>
+                    <option value="Questionary"></option>
                 </select>
 
                 <section class="dynamic-form" id="dynamic_form"></section>
@@ -41,7 +41,9 @@
             </form>
         </section>
     </div>
-    
+    <div class="task-msg">
+
+    </div>
 </div>
 {% endblock %}
 

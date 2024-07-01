@@ -125,7 +125,7 @@ def create_app():
                 desc = request.form.get('desc')
                 points = request.form.get('points')
                 no_of_slots = request.form.get('no_of_slots')                
-                no_of_fields = int(request.form.get('no_of_fields'))
+                no_of_fields = int(request.form.get('no_of_fields'))                    
                 
                 # Extract dynamically generated fields
                 form_data = {}
