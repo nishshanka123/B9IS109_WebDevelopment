@@ -35,6 +35,7 @@
                         const paragraph = document.createElement('p');
                         const table = document.createElement('table');
                         const input = document.createElement('input');
+                        const br = document.createElement('br');
                         
 
                         title.textContent = item.title;
@@ -69,7 +70,9 @@
 
                         div.appendChild(title);
                         div.appendChild(paragraph);
+                        div.appendChild(document.createElement('br'));
                         div.appendChild(table);
+                        div.appendChild(document.createElement('br'));
                         div.appendChild(input);
 
                         container.appendChild(div);
@@ -128,7 +131,7 @@
                             const tr1 = document.createElement('tr');
                             const td1 = document.createElement('td');
                             const td2 = document.createElement('td');
-                            td1.textContent = "Task Type: ";
+                            td1.textContent = "Task Type:             ";
                             td2.textContent = item.task_type;
                             tr1.appendChild(td1);
                             tr1.appendChild(td2);
@@ -139,7 +142,7 @@
                             const tr2 = document.createElement('tr');
                             const td21 = document.createElement('td');
                             const td22 = document.createElement('td');
-                            td21.textContent = "Number of Points: ";
+                            td21.textContent = "Number of Points:      ";
                             td22.textContent = item.points;
                             tr2.appendChild(td21);
                             tr2.appendChild(td22);
@@ -148,7 +151,9 @@
 
                         div.appendChild(title);
                         div.appendChild(paragraph);
+                        div.appendChild(document.createElement('br'));
                         div.appendChild(table);
+                        div.appendChild(document.createElement('br'));
                         if (item.task_id) {
                             form.appendChild(input);
                             form.appendChild(submit_button);

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <title>{% block page_title %}{% endblock %}</title>    
     <link rel="stylesheet" href="{{ url_for('static', filename='tsub.css') }}">
@@ -18,7 +19,7 @@
                     {% if session['role_id'] == 1 %}
                         <ul>
                             <li><a href="#">Welcome {{ session['user_name'] }}</a></li>
-                            <li><a href="{{ url_for('index') }}">Home</a></li>
+                            <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i>Home</a></li>
                             <li> | <a href="{{ url_for('loadDashboard') }}">Publisher Dashboard</a> | </li>                            
                             <li><a href="{{ url_for('publishTask') }}">Publish Tasks</a> | </li>
                             <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
