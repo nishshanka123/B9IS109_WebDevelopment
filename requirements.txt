@@ -3,7 +3,6 @@ ansible==9.3.0
 ansible-base==2.10.8
 ansible-core==2.16.4
 apache-libcloud==3.2.0
-apturl==0.5.2
 argcomplete==1.8.1
 array_record==0.5.1
 astunparse==1.6.3
