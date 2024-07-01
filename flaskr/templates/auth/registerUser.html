@@ -1,6 +1,6 @@
-{% extends 't_sub_base.html' %}
-
 <script src="{{ url_for('static', filename='registration.js') }}"></script>
+
+{% extends 't_sub_base.html' %}
 
 {% block page_title %} RegisterUser {% endblock %}
 
@@ -51,16 +51,86 @@
                     <input type="submit" value="Register" class="btn">
                     <input type="reset" class="btn" value="Clear Fields">
                 </div>
-                
+                <section name="responseMessage" id="responseMessage" > </section>
             </form>
         </section>
     </div>
     <div class="task">
-        <h2>Terms and Conditions</h2>
         <section>
             <p>Already a member ? <a href="{{ url_for('authenticate.login') }}">Login here</a></p>            
         </section>
-        <section name="responseMessage" id="responseMessage" > </section>
+        
+        <section>
+            <h2>Terms and Conditions</h2>
+            <p>
+                <strong>1. Introduction</strong><br>
+                Welcome to PollPit, a website that rewards users for participating in online surveys and browsing the internet. By registering for an account, you agree to be bound by these Terms and Conditions.
+            </p>
+            <p>
+                <strong>2. Eligibility</strong><br>
+                To register for an account, you must:
+                <ul>
+                    <li>Be at least 18 years old</li>
+                    <li>Have a valid email address</li>
+                </ul>
+            </p>
+            <p>
+                <strong>3. Account Registration</strong><br>
+                To register for an account, you must provide:
+                <ul>
+                    <li>A valid email address</li>
+                    <li>A username and password</li>
+                    <li>Your name and address</li>
+                    <li>Other information as required by the registration form</li>
+                </ul>
+            </p>
+            <!--
+            <p>
+                <strong>4. User Responsibilities</strong><br>
+                You agree to:
+                <ul>
+                    <li>Provide accurate and complete information</li>
+                    <li>Keep your account information up to date</li>
+                    <li>Use your account for personal, non-commercial use only</li>
+                    <li>Not share your account or password with others</li>
+                    <li>Not use the Service for illegal or fraudulent activities</li>
+                </ul>
+            </p>
+            <p>
+                <strong>5. Survey Participation</strong><br>
+                By participating in surveys, you agree to:
+                <ul>
+                    <li>Provide honest and accurate responses</li>
+                    <li>Not provide false or misleading information</li>
+                    <li>Not participate in surveys if you are not eligible</li>
+                </ul>
+            </p>
+            <p>
+                <strong>6. Intellectual Property</strong><br>
+                You agree that all intellectual property rights in the Service and the Site, including surveys and content, are owned by [Site Name] or its licensors.
+            </p>
+            <p>
+                <strong>7. Privacy</strong><br>
+                We will collect and use your personal information in accordance with our Privacy Policy.
+            </p>
+            <p>
+                <strong>8. Termination</strong><br>
+                We may terminate your account or access to the Service at any time, without notice.
+            </p>
+            <p>
+                <strong>9. Governing Law</strong><br>
+                These Terms and Conditions will be governed by and construed in accordance with the laws of the Country.
+            </p>
+            <p>
+                <strong>10. Changes to Terms and Conditions</strong><br>
+                We reserve the right to modify or change these Terms and Conditions at any time without notice.
+            </p>-->
+            <p>
+                By registering for an account, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
+            </p>
+        </section>
+        
+
     </div>
 </div>
 {% endblock %}

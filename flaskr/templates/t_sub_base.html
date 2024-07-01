@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <title>{% block page_title %}{% endblock %}</title>    
     <link rel="stylesheet" href="{{ url_for('static', filename='tsub.css') }}">
@@ -11,15 +12,42 @@
 <body>
     <header>
         <div class="container">
+            <img src="{{ url_for('static', filename='pollpit_logo.png') }}" alt="Logo">
             {% block header1 %}{% endblock %}
             <nav>
+                {% if session['user_name'] %}
+                    {% if session['role_id'] == 1 %}
+                        <ul>
+                            <li><a href="#">Welcome {{ session['user_name'] }}</a></li>
+                            <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i>Home</a></li>
+                            <li> | <a href="{{ url_for('loadDashboard') }}">Publisher Dashboard</a> | </li>                            
+                            <li><a href="{{ url_for('publishTask') }}">Publish Tasks</a> | </li>
+                            <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
+                        </ul>
+                    {% elif session['role_id'] == 2 %}
+                        <ul>
+                            <li><a href="#">Welcome {{ session['user_name'] }}</a> | </li>
+                            <li><a href="{{ url_for('index') }}">Home</a> | </li>
+                            <li><a href="{{ url_for('loadDashboard') }}">Task Dashboard</a> | </li>                            
+                            <li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>
+                        </ul>
+                    {% else %}
+                        <ul>
+                            <li><a href="{{ url_for('index') }}">Home</a></li>
+                            <li><a href="{{ url_for('about') }}">About Us</a></li>
+                            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                            <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>   
+                        </ul>
+                    {% endif %}                
+                {% else %}
                 <ul>
                     <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('index') }}">About</a></li>
-                    <li><a href="{{ url_for('index') }}">Contact</a></li>
-                    <li><a href="{{ url_for('index') }}">Login</a></li>
-                    <li><a href="{{ url_for('index') }}">Sign Up</a></li>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ url_for('authenticate.login') }}">Login</a></li>                    
                 </ul>
+                {% endif %}
+                
             </nav>
         </div>
     </header>

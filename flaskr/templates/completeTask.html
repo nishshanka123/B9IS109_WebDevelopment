@@ -1,0 +1,91 @@
+<script src="{{ url_for('static', filename='complete_task.js') }}"></script>
+
+{% extends 't_sub_base.html' %}
+
+{% block page_title %} CompleteTask {% endblock %}
+
+{% block header1 %}<h1>Complete a Task</h1>{% endblock %}
+
+{% block page_content %}
+
+<div class="task-grid">    
+    <div class="task">
+        <!--form action="{{ url_for('executeTask') }}" method="post"-->
+        <section class="dynamic-form" id="content-container"></section>
+        <section class="dynamic-form" id="responseMessage"></section>
+        <!--/form-->
+    </div>
+    <div class="task-msg"></div>            
+
+    <!--section class="registration-form"-->
+    {% if session['user_name'] %}
+    {% if session['role_id'] == 2 %}        
+        <script>
+            // Extract the data passed from Flask
+            const jsonData = {{ data|tojson }};
+            if(jsonData != null)
+            {
+                console.log("data---> ", jsonData);
+                // Parse the task data
+                const taskData = JSON.parse(jsonData.data.task_data);
+                const fields = taskData.fields;
+
+                const contentContainer = document.getElementById('content-container');
+
+                const form1 = document.createElement('form');
+                form1.action="{{ url_for('executeTask') }}";
+                form1.method="post";
+
+                // Header for task_name
+                const header = document.createElement('h3');
+                header.innerText = jsonData.data.task_name;
+                contentContainer.appendChild(header);
+
+                // Paragraph for description
+                const descriptionParagraph = document.createElement('p');
+                descriptionParagraph.innerText = jsonData.data.description;
+                contentContainer.appendChild(descriptionParagraph);
+
+                // Add the task ID as a hidden input box
+                const input_tid = document.createElement('input');
+                input_tid.type = "hidden";
+                input_tid.name = "task_id";
+                input_tid.value = jsonData.task_id;
+                form1.appendChild(input_tid);
+
+                // Generate input boxes dynamically
+                for (const [fieldName, fieldInfo] of Object.entries(fields)) {
+                    const fieldDiv = document.createElement('div');
+
+                    const label = document.createElement('label');
+                    label.innerText = fieldInfo.value;  // Set the value as the label text
+                    //fieldDiv.appendChild(label);
+                    form1.appendChild(label);
+
+                    const input = document.createElement('input');
+                    input.type = fieldInfo.data_type;
+                    input.name = fieldName;
+                    input.value = '';  // Leave the input box empty
+                    input.required;
+                    
+                    //fieldDiv.appendChild(input);
+                    form1.appendChild(input);
+
+                    //contentContainer.appendChild(fieldDiv);
+                    //form1.appendChild(fieldDiv);
+                    contentContainer.appendChild(form1);
+                }
+
+                const divb = document.createElement('div');
+                divb.className = "btn-box";
+                const input = document.createElement('input');
+                input.type = "submit";
+                input.value = 'Submit Task';  // Leave the input box empty
+                divb.appendChild(input);
+                form1.appendChild(divb);
+            }
+        </script>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

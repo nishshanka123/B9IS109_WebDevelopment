@@ -1,41 +1,18 @@
 use PTC;
+SELECT COUNT(user_name) FROM auth_info WHERE user_name = user_name;
+insert into auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) values
+('dbs_publisher','20024471@mydbs.ie','$2b$12$sxSLErmN0mGRPcVSr/sjM./s6w9vg2mtCsonCNOM5EV9q7d/TpqHG', 'q01', 'udawalawe', 2);
 select * from user_info;
 select * from auth_info;
-delete from auth_info where user_name='user_name';
+select * from user_role;
+insert into user_role(role_id, role) values(2, "subscriber");
+delete from auth_info;
+delete from auth_info where user_name='zzz';
 select count(user_name) from auth_info where user_name = 'user_name';
 CALL register_user('example_user', 'example@example.com', 'hashed_password', 1, 'answer', 1, @output_message);
-DELIMITER $$
-CREATE DEFINER=`dbs`@`localhost` PROCEDURE `register_user`(
-in user_name VARCHAR(20), 
-in email VARCHAR(20), 
-in pwd_hash VARCHAR(256), 
-in security_question_id varchar(45),
-in sq_answer varchar(30),
-in role_id int,
-out message varchar(60)
-)
-BEGIN
-	DECLARE user_count INT;
-
-    -- Check if the user already exists
-    SELECT COUNT(*) INTO user_count
-    FROM auth_info
-    WHERE user_name = user_name;
-	
-    -- If the user does not exist, insert a new record
-    IF user_count = 0 THEN
-        INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id)
-        VALUES (user_name, email, pwd_hash, security_question_id, sq_answer, role_id);
-        SET message = 'User successfully registered.';
-    ELSE
-        -- If the user already exists, set the return message
-        SET message = 'User already exists.';
-    END IF;
-    
-    select message;
-END$$
-DELIMITER ;
+CALL register_user('dbs_publisher','20024471@mydbs.ie','$2b$12$sxSLErmN0mGRPcVSr/sjM./s6w9vg2mtCsonCNOM5EV9q7d/TpqHG', 'q01', 'udawalawe', 2, @output_message);
 SELECT @output_message;
+SELECT COUNT(user_name) FROM auth_info WHERE user_name = 'dbs_publisher';
 
 
 INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 

@@ -8,18 +8,36 @@
 
 <div class="task-grid">    
     <div class="task">
-        <h2>About Us</h2>
-        <section>
-            <p>Who we are ?</p>
-            <p id="test">
-            </p>
-                <script type="text/javascript">
-                    var test = "{{data}}";
-                    console.log(test);
-                    document.getElementById("test").innerHTML = "<h1>{{data}}</h1>";
-
-                </script>
-        </section>
+        <section class="about-us">
+            <h2>About Us</h2>
+            <p>Welcome to <span class="site-name">PollPit</span>, your premier destination for sharing your opinions and earning rewards!</p>
+            <div class="our-story">
+              <h3>Our Story</h3>
+              <p>PollPit was founded on the belief that everyone's opinion matters. We saw an opportunity to create a platform that rewards individuals for their participation in online surveys and browsing the internet. Our goal is to make it easy and accessible for anyone to share their thoughts and earn rewards in the process.</p>
+            </div>
+            <div class="our-values">
+              <h3>Our Values</h3>
+              <ul>
+                <li><span>Transparency</span>: We believe in clear and honest communication.</li>
+                <li><span>Integrity</span>: We prioritize ethical practices in all our dealings.</li>
+                <li><span>Innovation</span>: We strive to stay ahead of the curve in technology and research methods.</li>
+                <li><span>Community</span>: We value our members and their contributions.</li>
+              </ul>
+            </div>
+            <div class="our-team">
+              <h3>Our Team</h3>
+              <p>Our team consists of experienced professionals from various fields, including market research, software development, and customer support. We work tirelessly to ensure that our platform is user-friendly, secure, and rewarding.</p>
+            </div>
+            <div class="our-promise">
+              <h3>Our Promise</h3>
+              <ul>
+                <li>Provide a safe and secure environment for our members.</li>
+                <li>Offer a variety of surveys and rewards to choose from.</li>
+                <li>Listen to your feedback and continuously improve our platform.</li>
+                <li>Be transparent in our dealings and communication.</li>
+              </ul>
+            </div>
+          </section>        
     </div>       
 </div>
 {% endblock %}

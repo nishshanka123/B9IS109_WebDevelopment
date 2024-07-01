@@ -141,8 +141,15 @@ def login():
                 if user_data:
                     #print("user data: ", user_data)
                     user_data = user_data[0]
+                    hpwd = bcrypt.generate_password_hash(password).decode('utf-8')
                     #if not check_password_hash(user_data['pwd_hash'], password):
-                    if password != user_data['pwd_hash']:
+                    #print(F"pwds : {user_data[0]} : {hpwd}")
+
+                    if user_data:
+                        #print(F"user_data: {user_data['pwd_hash']}")
+                        if not bcrypt.check_password_hash(user_data['pwd_hash'], password):
+                            error = "Incorrect credentials. Please check your login and try again."
+                    else:
                         error = "Incorrect credentials. Please check your login and try again."
                 else:
                     error = "Incorrect credentials. Please check your login and try again."
@@ -150,6 +157,7 @@ def login():
         if error is None:
             session.clear()
             session['user_name'] = user_data['user_name']
+            session['role_id'] = user_data['role_id']
             response = {
                             'message': 'success',
                             'data': {
@@ -161,6 +169,7 @@ def login():
             #return redirect(url_for("index"))
             return jsonify(response)
         else:
+            print("TEST---> 1")
             response = {
                             'message': 'Authentication failure',
                             'data': {
@@ -221,3 +230,10 @@ def updateUser():
                 return redirect(url_for("auth.login"))
         flash(error, 'danger')
     return render_template('auth/registerUser.html')
+
+
+# My earnings
+@authenticate_bp.route('/myEarning', methods=['GET', 'POST'])
+def myEarning():
+           
+    return render_template('auth/my_earning.html')
