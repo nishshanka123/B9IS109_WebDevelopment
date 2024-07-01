@@ -293,4 +293,7 @@ def create_app():
 
     return app
 
+
+app = create_app()
+
 # Run application as a python file
