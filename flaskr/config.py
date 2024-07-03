@@ -6,4 +6,5 @@ class Config:
     MYSQL_USER = "nishshanka"
     MYSQL_PASSWORD = "malsara"
     MYSQL_HOST = "localhost"
-    MYSQL_DB = "PTC"
+    MYSQL_DB = "flaskr/instance/PTC.db"
+    database = "PTC.db"

@@ -130,9 +130,10 @@ def login():
                 print("Database connection is None")
                 error = "Database connection issue."
             else:
+                user_data = None
                 print("Get the user information from db")
                 try:
-                    query = "SELECT * FROM auth_info WHERE user_name=%s"
+                    query = "SELECT * FROM auth_info WHERE user_name=?"
                     user_data = db.fetch_query(query, (user_name,))
                 except Exception as ex:
                     print(f"DB query execution error occurred: {ex}")

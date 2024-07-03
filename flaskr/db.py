@@ -1,5 +1,5 @@
 #DB connectivity implementation for the web application
-import mysql.connector
+'''import mysql.connector
 from mysql.connector import Error
 
 class Database:
@@ -208,3 +208,151 @@ class Database:
                 cursor.close()
 
         return message
+
+'''
+
+
+# db.py
+# DB connectivity implementation for the web application using SQLite
+
+import sqlite3
+from sqlite3 import Error
+
+class Database:
+    def __init__(self, config):
+        self.config = config
+        self.connection = None
+    
+    # Open a connection to the database
+    def connect(self):
+        """Initialize the database connection"""
+        try:
+            print(F"database: {self.config['database']}")
+            self.connection = sqlite3.connect(self.config['database'])
+            print("Connected to SQLite database")
+        except Error as er:
+            print(f"Error occurred while connecting to SQLite database: {er}")
+    
+    # Function to disconnect the established connection with the database
+    def disconnect(self):
+        """Disconnect the already initialized database connection"""
+        if self.connection:
+            self.connection.close()
+            print("Database connection is disconnected")
+    
+    # Function to execute database query
+    def execute_query(self, query, params):
+        """Execute the database query 
+        Arguments:
+        query: database query to execute
+        params: parameters for the db query
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            self.connection.commit()
+        except Exception as er:
+            print(f"DB query execution failure: {er}")
+            raise Exception(f"{er}")
+        finally:
+            if cursor:
+                cursor.close()
+
+        return True
+    
+    # Function to execute database query with variable args
+    def execute_vquery(self, query, *params):
+        """Execute the database query 
+        Arguments:
+        query: database query to execute
+        params: parameters for the db query
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            self.connection.commit()
+        except Exception as er:
+            print(f"DB query execution failure: {er}")
+            raise Exception(f"{er}")
+        finally:
+            if cursor:
+                cursor.close()
+
+        return True
+    
+    # Function to fetch the records by executing a query
+    def fetch_query(self, query, params=None):
+        """Execute database query and return the result set as a dictionary
+        Arguments:
+        query: database query
+        params: parameters for the db query
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            result = cursor.fetchall()
+            return result
+        except Error as er:
+            print(f"DB query execution failure: {er}")
+            return None
+        finally:
+            if cursor:
+                cursor.close()
+
+    # Function to fetch records by query and variable args
+    def fetch_vquery(self, query, *params):
+        """Execute database query and return the result set as a dictionary
+        Arguments:
+        query: database query
+        params: parameters for the db query
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, *params)
+            result = cursor.fetchall()
+            return result
+        except Error as er:
+            print(f"DB query execution failure: {er}")
+            return None
+        finally:
+            if cursor:
+                cursor.close()
+
+'''
+# Sample usage
+if __name__ == "__main__":
+    db_config = {'database': 'example.db'}
+    db = Database(db_config)
+    db.connect()
+
+    # Example queries
+    create_table_query = """
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        hashed_password TEXT NOT NULL,
+        security_q TEXT NOT NULL,
+        security_qa TEXT NOT NULL,
+        pub_or_sub INTEGER NOT NULL
+    );
+    """
+    db.execute_query(create_table_query, ())
+
+    insert_query = """
+    INSERT INTO users (user_name, email, hashed_password, security_q, security_qa, pub_or_sub)
+    VALUES (?, ?, ?, ?, ?, ?);
+    """
+    db.execute_query(insert_query, ('username', 'email@example.com', 'hashed_password', 'security_question', 'security_answer', 1))
+
+    fetch_query = "SELECT * FROM users;"
+    users = db.fetch_query(fetch_query)
+    for user in users:
+        print(user)
+
+    db.disconnect()
+'''
