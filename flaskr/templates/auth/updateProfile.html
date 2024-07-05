@@ -17,7 +17,7 @@
 
             if (jsonData.length > 0) {
                 const data = jsonData[0]; // Assuming we are dealing with the first object for simplicity
-
+                console.log("Data---> ", data);
                 document.getElementById('user_name').value = data.user_name || '';
                 document.getElementById('email').value = data.email || '';
                 document.getElementById('first_name').value = data.first_name || '';
@@ -31,10 +31,11 @@
         </script>
         <section class="registration-form">
             <h2>Update My Profile</h2>
-            
+            <section name="responseMessage" id="responseMessage" > </section>
             <form id="updateProfileForm" action="{{ url_for('authenticate.updateProfile') }}" method="post">
                 <label for="user_name">Username:</label>
-                <input type="text" id="user_name" name="user_name" disabled>
+                <input type="text" id="u_name" name="user_name" disabled>
+                <input type="hidden" id="user_name" name="user_name">
                 
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" disabled>
@@ -62,7 +63,7 @@
                     <input type="submit" class="btn" value="Update Profile">
                     <input type="reset" class="btn" value="Clear Fields">
                 </div>
-            </form>
+            </form>            
         </section>
         {% endif %}        
     </div>

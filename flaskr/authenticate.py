@@ -175,7 +175,6 @@ def login():
             #return redirect(url_for("index"))
             return jsonify(response)
         else:
-            print("TEST---> 1")
             response = {
                             'message': 'Authentication failure',
                             'data': {
@@ -207,7 +206,56 @@ def logout():
 def updateProfile():
     error = None
     if request.method == 'POST':
-        pass
+        user_name = request.form['user_name']
+
+        print(f"REQ: {request.form}")
+
+        db = g.get('db')
+        if db is None:
+            print("DB connection is None")
+            error = "Database connection issue."
+
+        try:
+            update_user_info = '''UPDATE user_info SET first_name=?, last_name=?, date_of_birth=?, address_line1=?, address_line2=?, area_code=? WHERE user_name=?'''
+            
+            result = db.execute_query(update_user_info, (request.form['first_name'], 
+                                                            request.form['last_name'], 
+                                                            request.form['date_of_birth'], 
+                                                            request.form['address_line1'], 
+                                                            request.form['address_line2'],
+                                                            request.form['area_code'],
+                                                            request.form['user_name'],))
+
+            if result >= 0:
+                response = {
+                            'message': "Profile is updated successfully.",
+                            'data': {
+                                'message': "Profile is updated successfully.",
+                                'status': "success",
+                            }
+                        }
+                return jsonify(response)
+            else:
+                response = {
+                            'message': result,
+                            'data': {
+                                'message': result,
+                                'status': "fail"
+                            }
+                        }
+                return jsonify(response)                    
+
+        except Exception as ex:
+            print(f"Database error occurred: {ex}")
+            error = F"User detail update failed : {ex}"
+            response = {
+                            'message': 'User detail update failed: Database error, Try again later',
+                            'data': {
+                                'message': error,
+                                'status': "fail"
+                            }
+                        }
+            return jsonify(response)
     else:
         if session['user_name']:
             select_query = None
@@ -220,7 +268,6 @@ def updateProfile():
             else:
                 select_query = "Select * from user_info where user_name = ?"
                 result = db.fetch_query(select_query, (session['user_name'],))
-                print(f"TEST-------> {result}")
                 
                 data = None
                 json_data = []
