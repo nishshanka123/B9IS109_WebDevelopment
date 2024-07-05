@@ -18,8 +18,8 @@
                 {% if session['user_name'] %}
                     {% if session['role_id'] == 1 %}
                         <ul>
-                            <li><a href="{{ url_for('authenticate.viewProfile') }} class="nav-link"><i class="fas fa-user"></i> {{ session['user_name'] }}</a></li>
-                            <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i>Home</a> </li>
+                            <li><a href="{{ url_for('authenticate.viewProfile') }}" class="nav-link"><i class="fas fa-user"></i> {{ session['user_name'] }}</a></li>
+                            <li><a href="{{ url_for('index') }}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
                             <li><a href="{{ url_for('loadDashboard') }}" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                             <li><a href="{{ url_for('publishTask') }}" class="nav-link"><i class="fas fa-tasks"></i> Publish Tasks</a></li>
                             <!--<li><a href="{{ url_for('authenticate.logout') }}">Log Out</a></li>-->
@@ -35,7 +35,7 @@
                     {% else %}
                         <ul>
                             <li><a href="{{ url_for('index') }}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-                            <li><a href="{{ url_for('about') }}">About Us</a></li>
+                            <li><a href="{{ url_for('about') }}" class="nav-link"><i class="fas fa-info-circle"></i> About Us</a></li>
                             <!--li><a href="{{ url_for('contact') }}">Contact Us</a></li-->
                             <!--<li><a href="{{ url_for('authenticate.login') }}">Login</a></li>-->
                             <li><a href="{{ url_for('authenticate.login') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i>Login</a></li>

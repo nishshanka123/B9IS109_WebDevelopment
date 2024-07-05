@@ -139,17 +139,18 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);   
     height: 100%; /* Full viewport height */
     background-image: url("images/clipboard-2.png");
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat; 
 }
 
 .message {
-    background-color: #d6b92539;
+    background-color: white;
     padding: 1.5rem;
     border-radius: 8px;
     text-align: left;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #0056b3;
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
 }
 
 .btn {

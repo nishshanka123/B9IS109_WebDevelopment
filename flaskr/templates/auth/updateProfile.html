@@ -19,6 +19,7 @@
                 const data = jsonData[0]; // Assuming we are dealing with the first object for simplicity
                 console.log("Data---> ", data);
                 document.getElementById('user_name').value = data.user_name || '';
+                document.getElementById('u_name').value = data.user_name || '';
                 document.getElementById('email').value = data.email || '';
                 document.getElementById('first_name').value = data.first_name || '';
                 document.getElementById('last_name').value = data.last_name || '';
