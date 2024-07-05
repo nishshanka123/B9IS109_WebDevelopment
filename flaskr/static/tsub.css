@@ -322,6 +322,16 @@ nav li {
     margin: 5px 0;
 }
 
+.truncate {
+    min-width: 100px;            /* Fixed width */
+    min-height: 250px;
+    overflow: hidden;        /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis (...) for overflowed text */
+    border: 1px solid #ccc;  /* Optional: add border for visual clarity */
+    padding: 10px;           /* Optional: add padding for aesthetics */
+    box-sizing: border-box;  /* Include padding and border in the element's total width and height */
+}
+
 
 footer {
     background-color: #333;

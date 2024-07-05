@@ -206,9 +206,9 @@ def create_app():
             error = "Database connection issue."
 
         if session['user_name']:
-            if request.method == 'POST':
-                task_id = request.form.get('task_id')
-                print(F"Received task ID: {task_id}")
+            task_id = request.form.get('task_id')
+            print(F"Received task ID: {task_id}")
+            if request.method == 'POST':                
                 if session['role_id'] == 2:
                     select_query = "Select task_name, description, task_data from ptc_publisher_task where ptask_id = ?"
                     result = db.fetch_query(select_query, (task_id,))
@@ -221,7 +221,12 @@ def create_app():
                     print(F"Json data: {jason_task_data}")
                     return render_template('completeTask.html', data=jason_task_data)
                 else:
-                    return render_template('completeTask.html')            
+                    # delete request for publishers
+                    delete_query = "DELETE from ptc_publisher_task where ptask_id = ?"
+                    result = db.execute_query(delete_query, (task_id,))
+                    if result >= 0:
+                        return redirect(url_for("loadDashboard"))
+                    return redirect(url_for("loadDashboard"))
         else:
             return redirect(url_for("index"))
         

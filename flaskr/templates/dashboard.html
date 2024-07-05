@@ -11,7 +11,6 @@
 <section class="registration-form">
     <div class="task-grid" id="task_grid">
         
-            <!--section class="registration-form"-->
             {% if session['user_name'] %}
             {% if session['role_id'] == 1 %}
 
@@ -33,6 +32,7 @@
                         div.className = "task-dashboard";
                         const title = document.createElement('h2');
                         const paragraph = document.createElement('p');
+                        paragraph.className="truncate";
                         const table = document.createElement('table');
                         const input = document.createElement('input');
                         const br = document.createElement('br');
@@ -74,7 +74,17 @@
                         div.appendChild(table);
                         div.appendChild(document.createElement('br'));
                         if (item.task_id) {
-                            div.appendChild(input);
+                            const submit_button = document.createElement('input');
+                            submit_button.type = "submit";
+                            submit_button.name = "complete_task";
+                            submit_button.value = "Delete Task";
+
+                            const form = document.createElement('form');
+                            form.action="{{ url_for('completeTask') }}";
+                            form.method="post";
+                            form.appendChild(input);
+                            form.appendChild(submit_button);
+                            div.appendChild(form);
                         }
 
                         container.appendChild(div);
@@ -103,6 +113,7 @@
                         div.className = "task-dashboard";
                         const title = document.createElement('h2');
                         const paragraph = document.createElement('p');
+                        paragraph.className="truncate";
                         const table = document.createElement('table');
                         const input = document.createElement('input');
                         //<input type="submit" value="Publish Task" class="btn">
