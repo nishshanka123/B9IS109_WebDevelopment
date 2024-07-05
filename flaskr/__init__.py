@@ -41,6 +41,10 @@ def create_app():
     def index():
         return render_template('index.html')
     
+    @app.route('/features')
+    def features():
+        return render_template('features.html')
+    
     ## Task Dashboard
     @app.route('/dashboard',methods=['GET', 'POST'])
     def loadDashboard():            
