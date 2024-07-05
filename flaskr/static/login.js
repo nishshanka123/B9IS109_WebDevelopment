@@ -45,11 +45,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         window.location.href = data.data.redirect_url;
                     } else {
                         //alert(result.message);
+                        login_form = document.getElementById('login_form');
+                        login_form.reset();
                         responseMessage.innerHTML = `<div class="message"><p>${data.data.message}</p></div>`;
                     }
                 }
             })
             .catch(error => {
+                login_form = document.getElementById('login_form');
+                login_form.reset();
                 console.error('Error:', error);
                 const responseMessage = document.getElementById('responseMessage');
                 responseMessage.innerHTML = `<p>Error processing the response: ${error.message}</p>`;

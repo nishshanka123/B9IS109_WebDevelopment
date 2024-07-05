@@ -1,0 +1,86 @@
+<script src="{{ url_for('static', filename='update_profile.js') }}"></script>
+{% extends 't_sub_base.html' %}
+
+{% block page_title %} UpdateProfile {% endblock %}
+
+{% block header1 %}<h1>Update my profile</h1>{% endblock %} 
+
+{% block page_content %}
+
+<div class="task-grid">    
+    <div class="task">
+        {% if session['user_name'] %}
+        <script type="text/javascript">
+            /*document.addEventListener('DOMContentLoaded', function () {
+            const formData = {{ form_data|tojson }};
+            const jsonData = formData.json_data;
+
+            if (jsonData.length > 0) {
+                const data = jsonData[0]; // Assuming we are dealing with the first object for simplicity
+
+                document.getElementById('user_name').value = data.user_name || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('first_name').value = data.first_name || '';
+                document.getElementById('last_name').value = data.last_name || '';
+                document.getElementById('date_of_birth').value = data.date_of_birth || '';
+                document.getElementById('address_line1').value = data.address_line1 || '';
+                document.getElementById('address_line2').value = data.address_line2 || '';
+                document.getElementById('area_code').value = data.area_code || '';
+            }
+        });*/
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const formData = {{ form_data|tojson }};
+            const jsonData = formData.json_data;
+
+            if (jsonData.length > 0) {
+                const data = jsonData[0]; // Assuming we are dealing with the first object for simplicity
+
+                document.getElementById('user_name').textContent = data.user_name || 'N/A';
+                document.getElementById('email').textContent = data.email || 'N/A';
+                document.getElementById('first_name').textContent = data.first_name || 'N/A';
+                document.getElementById('last_name').textContent = data.last_name || 'N/A';
+                document.getElementById('date_of_birth').textContent = data.date_of_birth || 'N/A';
+                document.getElementById('address_line1').textContent = data.address_line1 || 'N/A';
+                document.getElementById('address_line2').textContent = data.address_line2 || 'N/A';
+                document.getElementById('area_code').textContent = data.area_code || 'N/A';
+            }
+        });
+
+        </script>
+        <section class="registration-form">
+            <h2>My Profile</h2>
+                <div class="profile-info">
+                    <strong>Username:</strong> <span id="user_name"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>Email:</strong> <span id="email"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>First Name:</strong> <span id="first_name"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>Last Name:</strong> <span id="last_name"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>Date of Birth:</strong> <span id="date_of_birth"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>Address Line 1:</strong> <span id="address_line1"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>Address Line 2:</strong> <span id="address_line2"></span>
+                </div>
+                <div class="profile-info">
+                    <strong>Area Code:</strong> <span id="area_code"></span>
+                </div>
+                <div class="profile-info">
+                    <p><a href="{{ url_for('authenticate.updateProfile') }}">Click Here</a> to update your profile.</p>
+                </div>
+        </section>
+        {% endif %}        
+    </div>
+    <div class="task-msg"></div>                
+</div>
+
+{% endblock %}

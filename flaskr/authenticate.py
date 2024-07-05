@@ -54,16 +54,20 @@ def registerUser():
                 error = "Database connection issue."
 
             try:
-                #insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
-                #              VALUES (%s, %s, %s, %s, %s, %s)'''
+                insert_q = '''INSERT INTO auth_info (user_name, email, pwd_hash, security_question_id, sq_answer, role_id) 
+                              VALUES (?, ?, ?, ?, ?, ?)'''
+                insert_user_info = '''INSERT INTO user_info(user_name, email, first_name, last_name, date_of_birth, address_line1, address_line2, area_code) 
+                                VALUES(?,?,?,?,?,?,?,?)'''
                 #hashed_password = generate_password_hash(password)
                 #print(F"query: {insert_q}")
                 
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
                 #db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, '1'))
-                result_message = db.call_register_user(user_name, email, hashed_password, security_q, security_qa, pub_or_sub)
-                print(F"test----1: {result_message}")
-                if result_message == 'SUCCESS':
+                #result_message = db.call_register_user(user_name, email, hashed_password, security_q, security_qa, pub_or_sub)
+                result = db.execute_query(insert_q, (user_name, email, hashed_password, security_q, security_qa, pub_or_sub,))
+                print(F"test---->: {result}")
+                if result >= 0:
+                    result2 = db.execute_query(insert_user_info, (user_name, email, '', '', '', '', '', '',))
                     response = {
                                 'message': "User registration successful",
                                 'data': {
@@ -75,11 +79,11 @@ def registerUser():
                     return jsonify(response)
                     #return redirect(url_for("authenticate.login"))
                 else:
-                    #print(f"test----> {result_message}")
+                    #print(f"test----> {result}")
                     response = {
-                                'message': result_message,
+                                'message': result,
                                 'data': {
-                                    'message': result_message,
+                                    'message': result,
                                     'status': "fail"
                                 }
                             }
@@ -135,12 +139,13 @@ def login():
                 try:
                     query = "SELECT * FROM auth_info WHERE user_name=?"
                     user_data = db.fetch_query(query, (user_name,))
+                    print(f"user data---> {user_data}")
                 except Exception as ex:
                     print(f"DB query execution error occurred: {ex}")
                     error = "Database query error."
 
                 if user_data:
-                    #print("user data: ", user_data)
+                    print("user data: ", user_data)
                     user_data = user_data[0]
                     hpwd = bcrypt.generate_password_hash(password).decode('utf-8')
                     #if not check_password_hash(user_data['pwd_hash'], password):
@@ -198,40 +203,103 @@ def logout():
     return render_template('auth/login.html')
 
 
-@authenticate_bp.route('/updateUser', methods=['GET', 'POST'])
-def updateUser():
+@authenticate_bp.route('/updateProfile', methods=['GET', 'POST'])
+def updateProfile():
     error = None
     if request.method == 'POST':
-        user_name = request.form['name']
-        email = request.form['email']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        address_line1 = request.form['address_line1']
-        address_line2 = request.form['address_line2']
-        area_code = request.form['area_code']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        country = request.form['country']
-
-        if not user_name:
-            error = 'User name should not be empty'
-        elif not password:
-            error = 'Password should not be empty'
-
-        if error is None:
+        pass
+    else:
+        if session['user_name']:
+            select_query = None
+            response = None
             db = g.get('db')
-            try:
-                update_q = """UPDATE user_info SET email=%s, first_name=%s, last_name=%s, date_of_birth=%s, address_line1=%s, 
-                              address_line2=%s, area_code=%s WHERE user_name=%s"""
-                db.execute_query(update_q, (email, first_name, last_name, user_name, address_line1, address_line2, area_code))
-            except Exception as ex:
-                print(f"Database error occurred: {ex}")
-                flash(f"Error: {str(ex)}", 'danger')
+            result = None
+            if db is None:
+                print("Database connection is None")
+                error = "Database connection issue."
             else:
-                return redirect(url_for("auth.login"))
-        flash(error, 'danger')
-    return render_template('auth/registerUser.html')
+                select_query = "Select * from user_info where user_name = ?"
+                result = db.fetch_query(select_query, (session['user_name'],))
+                print(f"TEST-------> {result}")
+                
+                data = None
+                json_data = []
+                if result:
+                    print(f"Results: {result[0]}")
+                    for result_ob in result:
+                        form_data_json = {
+                            "user_name": F"{result_ob['user_name']}",
+                            "email": F"{result_ob['email']}",
+                            "first_name": F"{result_ob['first_name']}",
+                            "last_name" : F"{result_ob['last_name']}",
+                            "date_of_birth" : F"{result_ob['date_of_birth']}",
+                            "address_line1" : F"{result_ob['address_line1']}",
+                            "address_line2" : F"{result_ob['address_line2']}",
+                            "area_code" : F"{result_ob['area_code']}"
+                        }
+                        json_data.append(form_data_json)                
+                else:
+                    print("TEST--------> No data")
+                    form_data_json = {
+                        "description": "There are no available tasks at the moment. Please check later.",
+                        "task_name": "No Tasks",
+                        "title": "Awaiting for tasks"
+                    }
+                    json_data.append(form_data_json)                
+                    
+                data = {'json_data': json_data, 'count': 1}
+                return render_template('auth/updateProfile.html', form_data=data)
+        else:
+            return redirect(url_for("index"))
 
+
+@authenticate_bp.route('/viewProfile', methods=['GET', 'POST'])
+def viewProfile():
+    error = None
+    if request.method == 'POST':
+        pass
+    else:
+        if session['user_name']:
+            select_query = None
+            response = None
+            db = g.get('db')
+            result = None
+            if db is None:
+                print("Database connection is None")
+                error = "Database connection issue."
+            else:
+                select_query = "Select * from user_info where user_name = ?"
+                result = db.fetch_query(select_query, (session['user_name'],))
+                
+                data = None
+                json_data = []
+                if result:
+                    print(f"Results: {result[0]}")
+                    for result_ob in result:
+                        form_data_json = {
+                            "user_name": F"{result_ob['user_name']}",
+                            "email": F"{result_ob['email']}",
+                            "first_name": F"{result_ob['first_name']}",
+                            "last_name" : F"{result_ob['last_name']}",
+                            "date_of_birth" : F"{result_ob['date_of_birth']}",
+                            "address_line1" : F"{result_ob['address_line1']}",
+                            "address_line2" : F"{result_ob['address_line2']}",
+                            "area_code" : F"{result_ob['area_code']}"
+                        }
+                        json_data.append(form_data_json)                
+                else:
+                    form_data_json = {
+                        "description": "There are no available tasks at the moment. Please check later.",
+                        "task_name": "No Tasks",
+                        "title": "Awaiting for tasks"
+                    }
+                    json_data.append(form_data_json)                
+                    
+                data = {'json_data': json_data, 'count': 1}
+                return render_template('auth/viewProfile.html', form_data=data)
+        else:
+            return redirect(url_for("index"))
+     
 
 # My earnings
 @authenticate_bp.route('/myEarning', methods=['GET', 'POST'])

@@ -54,7 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         window.location.href = data.data.redirect_url;
                     } else {
                         //alert(result.message);
-                        responseMessage.innerHTML = `<div class="message"><p>${data.data.message}</p></div>`;
+                        var url = "{{ url_for('authenticate.registerUser') }}";
+                        const formSection = document.getElementById("form_registration");
+                        formSection.innerHTML = "";
+                        responseMessage.innerHTML = `<div class="message"><p>${data.data.message} <br><br><a href="">Click Hear</a> to try again.</a></p></div>`
                     }
                 }
             })

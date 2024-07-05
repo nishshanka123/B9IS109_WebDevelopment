@@ -63,6 +63,30 @@ header nav ul li a:hover {
     text-decoration: underline;
 }
 
+/* overide navigation with icon style */
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: wheat; /* Adjust the color as necessary */
+    margin-bottom: 10px;
+}
+
+.nav-link i {
+    margin-right: 8px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    margin: 5px 0;
+}
+
+
 /* design for the page content */
 main {
     flex: 1;

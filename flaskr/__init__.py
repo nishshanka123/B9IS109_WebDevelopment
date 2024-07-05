@@ -22,15 +22,13 @@ def create_app():
     @app.before_request
     def before_request():
         if 'db' not in g:
-            g.db = Database(db_config)
+            g.db = Database(db_config['database'])
             g.db.connect()
 
     # disconnect the database at app teardown
     @app.teardown_appcontext
-    def close_db_connection(exception):
-        db = g.pop('db', None)
-        if db is not None:
-            db.disconnect()
+    def shutdown_session(exception=None):
+        g.db.close_db(exception)
     
     # do register the authentication blueprint
     app.register_blueprint(authenticate_bp)
@@ -56,7 +54,7 @@ def create_app():
                 error = "Database connection issue."
 
             if session['role_id'] == 1:
-                select_query = "Select ptask_id, task_name, task_type, points, description from ptc_publisher_task where user_name = %s"
+                select_query = "Select ptask_id, task_name, task_type, points, description from ptc_publisher_task where user_name = ?"
                 result = db.fetch_query(select_query, (session['user_name'],))
             elif session['role_id'] == 2:
                 select_query = "Select ptask_id, task_name, task_type, points, description from ptc_publisher_task"
@@ -148,14 +146,14 @@ def create_app():
                 for key, value in form_data.items():
                     print(f"{key}: {value}")
 
-                data_in_text = "insert into ptc_publisher_task (user_name, task_name, number_of_slots, task_type, points, description, task_data) values (%s, %s, %s, %s, %s, %s, %s)"
+                data_in_text = "insert into ptc_publisher_task (user_name, task_name, number_of_slots, task_type, points, description, task_data) values (?,?,?,?,?,?,?)"
                 
                 db = g.get('db')
                 if db is None:
                     print("Database connection is None")
                     error = "Database connection issue."
                 else:
-                    result = db.execute_vquery(data_in_text, session['user_name'], task_name, no_of_slots, job_type, points, desc, form_data_json)
+                    result = db.execute_query(data_in_text, (session['user_name'], task_name, no_of_slots, job_type, points, desc, form_data_json,))
 
                 if result:
                     response = {
@@ -212,7 +210,7 @@ def create_app():
                 task_id = request.form.get('task_id')
                 print(F"Received task ID: {task_id}")
                 if session['role_id'] == 2:
-                    select_query = "Select task_name, description, task_data from ptc_publisher_task where ptask_id = %s"
+                    select_query = "Select task_name, description, task_data from ptc_publisher_task where ptask_id = ?"
                     result = db.fetch_query(select_query, (task_id,))
                     
                     if result:
@@ -247,8 +245,8 @@ def create_app():
                     print("Database connection is None")
                     error = "Database connection issue."
                 else:
-                    query = "insert into ptc_client_task(ptask_id, task_name, points, data) values (%s, %s, %s, %s)"
-                    result = db.execute_vquery(query, task_id, task_name, points, task_data_json)
+                    query = "insert into ptc_client_task(ptask_id, task_name, points, data) values (?, ?, ?, ?)"
+                    result = db.execute_query(query, (task_id, task_name, points, task_data_json,))
                     if result:
                         response = {
                                 'message': 'Well done. Task completed, Thank you for your time.',

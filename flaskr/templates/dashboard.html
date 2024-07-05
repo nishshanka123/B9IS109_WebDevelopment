@@ -73,7 +73,9 @@
                         div.appendChild(document.createElement('br'));
                         div.appendChild(table);
                         div.appendChild(document.createElement('br'));
-                        div.appendChild(input);
+                        if (item.task_id) {
+                            div.appendChild(input);
+                        }
 
                         container.appendChild(div);
                     });

@@ -10,7 +10,7 @@
     <div class="task">
         <section class="registration-form">
             <h2>Signin</h2>
-            <form action="{{ url_for('authenticate.login') }}" method="post">
+            <form action="{{ url_for('authenticate.login') }}" id="login_form" method="post">
                 <label for="user_name">User Name:</label>
                 <input type="text" id="user_name" name="user_name" required>
                 <label for="password">Password:</label>
