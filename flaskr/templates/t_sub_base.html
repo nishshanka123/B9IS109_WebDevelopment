@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="container">
-            <img src="{{ url_for('static', filename='pollpit_logo.png') }}" alt="Logo">
+            <img src="{{ url_for('static', filename='images/pollpit_logo.png') }}" alt="Logo">
             {% block header1 %}{% endblock %}
             <nav>
                 {% if session['user_name'] %}
